@@ -33,8 +33,8 @@ export class ApiActionCreator {
             apiActionType: ApiActionType.HtmlRequest,
             requestConfig: {
                 headers: {
-                    ["Content-Type"]: "text/html",
-                    ["Accept"]: "text/html",
+                    "Content-Type": "text/html",
+                    Accept: "text/html",
                 },
             },
         };
@@ -47,7 +47,7 @@ export class ApiActionCreator {
         const requestConfig = {
             ...config.requestConfig,
             headers: {
-                ["Content-Type"]: "multipart/form-data",
+                "Content-Type": "multipart/form-data",
             },
         };
         const fileUploadConfig = {
