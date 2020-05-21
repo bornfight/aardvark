@@ -31,7 +31,20 @@
             "pre-commit": "tsdx lint"
         }
     },
-    "prettier": "@bornfight/prettier",
+    "prettier": {
+        "trailingComma": "all",
+        "printWidth": 80,
+        "tabWidth": 4,
+        "useTabs": false,
+        "semi": true,
+        "singleQuote": false,
+        "bracketSpacing": true,
+        "jsxBracketSameLine": false,
+        "arrowParens": "always",
+        "requirePragma": false,
+        "insertPragma": false,
+        "proseWrap": "always"
+    },
     "name": "@bornfight/aardvark",
     "repository": {
         "url": "https://github.com/bornfight/aardvark/",
@@ -41,7 +54,6 @@
     "private": true,
     "module": "dist/aardvark.esm.js",
     "devDependencies": {
-        "@bornfight/prettier": "^1.0.0",
         "@types/lodash": "^4.14.152",
         "@types/react": "^16.9.35",
         "@types/react-dom": "^16.9.8",
