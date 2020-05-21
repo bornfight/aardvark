@@ -3,15 +3,18 @@ import { AxiosResponse } from "axios";
 import { Action } from "redux";
 import { all, fork, put, takeEvery } from "redux-saga/effects";
 import { Saga } from "../interfaces/Saga";
-import { ApiService } from "../services/ApiService/apiService";
+import {
+    ApiService,
+    ApiServiceConstructorOptions,
+} from "../services/ApiService/apiService";
 import { ApiStatusTypePrefix } from "../services/ApiActionCreator/enums/ApiStatusTypePrefix";
 import { ApiReduxAction } from "../services/ApiActionCreator/interfaces/ApiReduxAction";
 import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 
 export class ApiSaga implements Saga {
     public readonly apiService: ApiService;
-    constructor(baseURL?: string) {
-        this.apiService = new ApiService({ baseURL });
+    constructor(apiServiceOptions: ApiServiceConstructorOptions) {
+        this.apiService = new ApiService(apiServiceOptions);
     }
 
     @autobind

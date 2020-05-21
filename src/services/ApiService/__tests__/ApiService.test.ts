@@ -3,7 +3,9 @@ import { AxiosResponse } from "axios";
 import { ApiService } from "../apiService";
 
 describe("ApiService", () => {
-    const apiService = new ApiService();
+    const apiService = new ApiService({
+        baseURL: "/foo",
+    });
     afterEach(() => {
         // cleaning up the mess left behind the previous test
         mockAxios.reset();

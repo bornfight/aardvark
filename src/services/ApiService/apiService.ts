@@ -2,22 +2,17 @@ import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig } from "axios";
 import { ApiResponse } from "ts-json-api";
 import { SerializedMergedData } from "../../json-api-client/interfaces/SerializedMergedData";
 
+export interface ApiServiceConstructorOptions {
+    baseURL: string;
+    headers?: { [key: string]: string };
+}
+
 export class ApiService {
     public readonly httpAdapter: AxiosInstance;
-
-    /**
-     * intentionally takes precedence over process.env so individual stories or tests can have mock api
-     * @param baseURL
-     */
-    constructor({ baseURL }: { baseURL?: string } = {}) {
+    constructor({ baseURL, headers }: ApiServiceConstructorOptions) {
         this.httpAdapter = axios.create({
-            baseURL: baseURL || process.env.REACT_APP_API_URL,
-            headers: {
-                // TODO: switch to application/vnd.api+json
-                "Content-Type": process.env.REACT_APP_API_CONTENT_TYPE,
-                // tslint:disable-next-line:object-literal-key-quotes
-                Accept: process.env.REACT_APP_API_CONTENT_TYPE,
-            },
+            baseURL,
+            headers,
         });
     }
 
