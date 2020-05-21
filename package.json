@@ -33,6 +33,10 @@
     },
     "prettier": "@bornfight/prettier",
     "name": "@bornfight/aardvark",
+    "repository": {
+        "url": "https://github.com/bornfight/aardvark/",
+        "type": "git"
+    },
     "author": "Bornfight",
     "private": true,
     "module": "dist/aardvark.esm.js",

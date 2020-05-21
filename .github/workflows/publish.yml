@@ -13,8 +13,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: yarn install
-      - run: yarn test
+      - run: npm install
+      - run: npm test
 
   publish-gpr:
     needs: build
@@ -24,9 +24,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: https://npm.pkg.github.com/
+          registry-url: "https://npm.pkg.github.com/"
           scope: "@bornfight"
-      - run: yarn install
-      - run: yarn publish
+      - run: npm install
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
