@@ -10,6 +10,9 @@
     "engines": {
         "node": ">=10"
     },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com/"
+    },
     "scripts": {
         "start": "tsdx watch",
         "build": "tsdx build",
