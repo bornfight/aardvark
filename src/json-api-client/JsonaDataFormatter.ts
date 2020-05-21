@@ -3,7 +3,7 @@ import { TJsonApiData, TReduxObject } from "jsona/lib/JsonaTypes";
 import { TJsonApiBody } from "jsona/src/JsonaTypes";
 import { Entities } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
-import { SerializeJsonApiModelParam } from "../interfaces/SerializeJsonApiModelParam";
+import { SerializeJsonApiModelParamAll } from "../interfaces/SerializeJsonApiModelParam";
 import { JsonApiData } from "./interfaces/JsonApiData";
 import { SerializedMergedData } from "./interfaces/SerializedMergedData";
 import { JsonApiRelationships } from "./interfaces/JsonApiRelationships";
@@ -51,7 +51,7 @@ class JsonaDataFormatter {
     public serializeWithInlineRelationships({
         model,
         includeNames,
-    }: SerializeJsonApiModelParam) {
+    }: SerializeJsonApiModelParamAll) {
         const serializedData = jsonaDenormalizer.serialize({
             stuff: model,
             includeNames,

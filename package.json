@@ -54,12 +54,13 @@
     "private": true,
     "module": "dist/aardvark.esm.js",
     "devDependencies": {
+        "@testing-library/react-hooks": "^3.2.1",
         "@types/lodash": "^4.14.152",
         "@types/react": "^16.9.35",
         "@types/react-dom": "^16.9.8",
+        "@types/react-redux": "^7.1.9",
         "@types/redux-mock-store": "^1.0.2",
         "@types/uuid": "^8.0.0",
-        "axios": "^0.19.2",
         "husky": "^4.2.5",
         "jest-mock-axios": "^4.0.0",
         "react": "^16.13.1",
@@ -76,11 +77,13 @@
     },
     "dependencies": {
         "autobind-decorator": "^2.4.0",
+        "axios": "^0.19.2",
         "json-api-normalizer": "^0.4.16",
         "jsona": "^1.5.1",
         "lodash": "^4.17.15",
         "lodash-es": "^4.17.15",
         "re-reselect": "^4.0.0",
+        "react-redux": "^7.2.0",
         "uuid": "^8.0.0"
     }
 }

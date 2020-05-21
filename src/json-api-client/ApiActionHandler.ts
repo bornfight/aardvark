@@ -8,13 +8,16 @@ import { RootState } from "../interfaces/RootState";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { Operation } from "../interfaces/Operation";
 import { StateHelper } from "../services/StateHelper/StateHelper";
-import { SerializeJsonApiModelParam } from "../interfaces/SerializeJsonApiModelParam";
+import {
+    SerializeJsonApiModelParam,
+    SerializeJsonApiModelPostParam,
+} from "../interfaces/SerializeJsonApiModelParam";
 import { ApiThunkAction } from "./interfaces/ApiThunkAction";
 import { ApiOperation } from "./ApiOperation/ApiOperation";
 import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
 
-export class ApiActionHandler<T extends JSONAModel = JSONAModel> {
+export class ApiActionHandler<T extends JSONAModel> {
     public readonly jsonaDataFormatter = new JsonaDataFormatter();
     public readonly operationUtility: ApiOperationUtility;
 
@@ -56,7 +59,7 @@ export class ApiActionHandler<T extends JSONAModel = JSONAModel> {
     }
 
     public create(
-        serializeModelParam: SerializeJsonApiModelParam,
+        serializeModelParam: SerializeJsonApiModelPostParam,
     ): ApiThunkAction {
         const serializedData = this.jsonaDataFormatter.serializeWithInlineRelationships(
             serializeModelParam,

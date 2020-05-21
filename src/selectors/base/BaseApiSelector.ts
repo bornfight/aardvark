@@ -13,6 +13,10 @@ export class BaseApiSelector<T> {
         getApiData,
         getIdentifier,
         (apiData, identifier): T | null => {
+            if (identifier === "") {
+                return null;
+            }
+            // TODO: it returns first item if empty string is provided, should return null
             return Normalizer.normalizeFromState<T>(
                 apiData,
                 this.resourceType,

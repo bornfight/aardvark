@@ -7,7 +7,7 @@ export class StateHelper {
     public static getIdentifiers(
         state: RootState,
         operation: Operation,
-        requestMethod: RequestMethod = RequestMethod.Get,
+        requestMethod: RequestMethod,
         id?: string,
     ) {
         const meta = StateHelper.getMeta(state, operation, requestMethod, id);
@@ -28,7 +28,7 @@ export class StateHelper {
     public static getMeta(
         state: RootState,
         operation: Operation,
-        requestMethod: RequestMethod = RequestMethod.Get,
+        requestMethod: RequestMethod,
         id?: string,
     ) {
         const methods =
@@ -62,7 +62,7 @@ export class StateHelper {
     public static getLinks(
         state: RootState,
         operation: Operation,
-        requestMethod: RequestMethod = RequestMethod.Get,
+        requestMethod: RequestMethod,
     ) {
         const methods = state.apiData.meta[operation];
 
@@ -88,7 +88,7 @@ export class StateHelper {
     public static getError(
         state: RootState,
         operation: Operation,
-        requestMethod: RequestMethod = RequestMethod.Get,
+        requestMethod: RequestMethod,
         id?: string,
     ) {
         const meta = this.getMeta(state, operation, requestMethod, id);
@@ -107,7 +107,7 @@ export class StateHelper {
     public static getLoading(
         state: RootState,
         operation: Operation,
-        requestMethod: RequestMethod = RequestMethod.Get,
+        requestMethod: RequestMethod,
         id?: string,
     ) {
         const meta = this.getMeta(state, operation, requestMethod, id);
