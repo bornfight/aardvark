@@ -6,7 +6,7 @@ import { RootState } from "../interfaces/RootState";
 import { Operation } from "../interfaces/Operation";
 import { JSONAModel } from "../interfaces/JSONAModel";
 import { ExtractJSONAModel } from "../types/UtilityTypes";
-import { SerializeJsonApiModelParam } from "../interfaces/SerializeJsonApiModelParam";
+import { SerializeJsonApiModelPatchParam } from "../interfaces/SerializeJsonApiModelParam";
 import { Dispatch } from "../interfaces/Dispatch";
 import { JsonApiObject } from "json-api-normalizer";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
@@ -22,7 +22,7 @@ export const usePatch = <
     loading: boolean;
     update: (
         id: string,
-        serializeModelParam: SerializeJsonApiModelParam<F>,
+        serializeModelParam: SerializeJsonApiModelPatchParam<F>,
     ) => Promise<JsonApiObject>;
 } => {
     const dispatch: Dispatch = useDispatch();
@@ -31,7 +31,7 @@ export const usePatch = <
     const update = useCallback(
         (
             patchId: string,
-            serializeModelParam: SerializeJsonApiModelParam<F>,
+            serializeModelParam: SerializeJsonApiModelPatchParam<F>,
         ) => {
             setId(patchId);
             return new Promise<JsonApiObject>((resolve, reject) => {
