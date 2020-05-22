@@ -74,17 +74,22 @@ export const getOperationMeta = createCachedSelector(
 export const getTotalCount = createCachedSelector(
     getOperationMeta,
     (operationMeta): number | undefined => {
-        let total;
-        let totalString;
+        let total: unknown;
         if (operationMeta && operationMeta.dataMeta) {
-            totalString =
-                operationMeta.dataMeta.total || operationMeta.dataMeta.count;
+            total =
+                operationMeta.dataMeta.total ||
+                operationMeta.dataMeta.count ||
+                operationMeta.dataMeta.totalItems;
         }
 
-        if (typeof totalString === "string" && totalString.length > 0) {
-            total = Number(totalString);
+        if (typeof total === "string" && total.length > 0) {
+            return Number(total);
         }
 
-        return total;
+        if (typeof total === "number") {
+            return total;
+        }
+
+        return undefined;
     },
 )((_apiDataMeta, operation, _requestMethod, id) => `${operation}_${id}`);
