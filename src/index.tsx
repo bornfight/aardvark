@@ -8,6 +8,8 @@ import { BaseApiSelector } from "./selectors/base/BaseApiSelector";
 import { ApiService } from "./services/ApiService/apiService";
 import { useGetAll, useGet, usePost, usePatch, useDelete } from "./hooks";
 import { FuzzySearchType } from "./enums/FuzzySearchType";
+import { JsonApiQuery } from "./services/JsonApiQuery/JsonApiQuery";
+import { JsonApiQueryConfig } from "./services/JsonApiQuery/interfaces/JsonApiQueryConfig";
 
 export {
     ApiSaga,
@@ -24,4 +26,6 @@ export {
     usePatch,
     useDelete,
     FuzzySearchType,
+    JsonApiQuery,
+    JsonApiQueryConfig,
 };
