@@ -6,7 +6,7 @@ import { JsonApiModel } from "./json-api-client/JsonApiModel";
 import { JsonApiReducer } from "./reducers/JsonApiReducer";
 import { BaseApiSelector } from "./selectors/base/BaseApiSelector";
 import { ApiService } from "./services/ApiService/apiService";
-import { useGetAll, useGet, usePost } from "./hooks";
+import { useGetAll, useGet, usePost, usePatch, useDelete } from "./hooks";
 
 export {
     ApiSaga,
@@ -20,4 +20,6 @@ export {
     useGetAll,
     useGet,
     usePost,
+    usePatch,
+    useDelete,
 };

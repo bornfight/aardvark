@@ -1,15 +1,18 @@
 import { JSONAModel } from "./JSONAModel";
 
-export type SerializeJsonApiModelParamAll =
+export type SerializeJsonApiModelParamType =
     | SerializeJsonApiModelParam
     | SerializeJsonApiModelPostParam;
 
-export interface SerializeJsonApiModelParam {
-    model: JSONAModel;
+
+export interface SerializeJsonApiModelParam<T extends JSONAModel = JSONAModel> {
+    model: T;
     includeNames: string[];
 }
 
-export interface SerializeJsonApiModelPostParam {
-    model: Omit<JSONAModel, "id">;
+export interface SerializeJsonApiModelPostParam<
+    T extends JSONAModel = JSONAModel
+> {
+    model: Omit<T, "id">;
     includeNames: string[];
 }
