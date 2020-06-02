@@ -13,6 +13,7 @@ export class JsonApiQuery {
     private readonly sortConfig?: SortConfig;
     private readonly filterConfigs: FilterConfig[];
     private readonly customParams: CustomParam[];
+    private readonly sortKeyName: string;
     private urlSearchParams = new URLSearchParams();
 
     constructor(config: JsonApiQueryConfig) {
@@ -22,6 +23,7 @@ export class JsonApiQuery {
         this.sortConfig = config.sortConfig;
         this.filterConfigs = config.filters || [];
         this.customParams = config.customParams || [];
+        this.sortKeyName = config.sortKeyName || "sort";
 
         this.init();
     }
@@ -76,7 +78,7 @@ export class JsonApiQuery {
     private appendSortQuery() {
         const sortQuery = this.getSortQuery();
         if (sortQuery !== "") {
-            this.urlSearchParams.append("sort", sortQuery);
+            this.urlSearchParams.append(this.sortKeyName, sortQuery);
         }
     }
 

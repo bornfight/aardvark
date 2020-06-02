@@ -24,7 +24,7 @@ describe("ApiOperationUtility", () => {
                     },
                 ],
                 filters: [{ name: "testCriteria", value: "amazing" }],
-                sortConfig: { order: "ascend", value: "bars" },
+                sortConfig: { order: "asc", value: "bars" },
             });
             const actual = fooOperationUtility.getOperationGetAll(query);
             expect(actual).toBe(

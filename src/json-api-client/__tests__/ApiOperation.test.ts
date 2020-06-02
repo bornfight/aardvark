@@ -138,7 +138,7 @@ describe("ApiOperation", () => {
                             },
                         ],
                         filters: [{ name: "testCriteria", value: "amazing" }],
-                        sortConfig: { order: "ascend", value: "bars" },
+                        sortConfig: { order: "asc", value: "bars" },
                     }),
                 }).getValue();
 
