@@ -6,7 +6,15 @@ import { JsonApiModel } from "./json-api-client/JsonApiModel";
 import { JsonApiReducer } from "./reducers/JsonApiReducer";
 import { BaseApiSelector } from "./selectors/base/BaseApiSelector";
 import { ApiService } from "./services/ApiService/apiService";
-import { useGetAll, useGet, usePost, usePatch, useDelete } from "./hooks";
+import {
+    useGetAll,
+    useGetAllControlled,
+    useGet,
+    useGetControlled,
+    usePost,
+    usePatch,
+    useDelete,
+} from "./hooks";
 import { FuzzySearchType } from "./enums/FuzzySearchType";
 import { JsonApiQuery } from "./services/JsonApiQuery/JsonApiQuery";
 import { JsonApiQueryConfig } from "./services/JsonApiQuery/interfaces/JsonApiQueryConfig";
@@ -21,7 +29,9 @@ export {
     BaseApiSelector,
     ApiService,
     useGetAll,
+    useGetAllControlled,
     useGet,
+    useGetControlled,
     usePost,
     usePatch,
     useDelete,
