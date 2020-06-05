@@ -25,8 +25,16 @@ export class ApiActionHandler<T extends JSONAModel> {
         private resourceType: ResourceType,
         private endpoint: Endpoint,
         public readonly apiSelector: BaseApiSelector<T>,
+        private transformId?: (id: string) => string,
     ) {
         this.operationUtility = new ApiOperationUtility(resourceType);
+    }
+
+    private getTransformedId(id: string): string {
+        if (this.transformId) {
+            return this.transformId(id);
+        }
+        return id;
     }
 
     public getLoading(
@@ -107,7 +115,7 @@ export class ApiActionHandler<T extends JSONAModel> {
 
         return ApiActionCreator.createAction({
             endpoint: this.endpoint,
-            id,
+            id: this.getTransformedId(id),
             operation,
             method,
             requestConfig: jsonApiQuery.getRequestConfig(),
@@ -129,7 +137,7 @@ export class ApiActionHandler<T extends JSONAModel> {
         });
 
         return ApiActionCreator.createAction({
-            id,
+            id: this.getTransformedId(id),
             endpoint: this.endpoint,
             operation,
             method,
@@ -149,7 +157,7 @@ export class ApiActionHandler<T extends JSONAModel> {
 
         return ApiActionCreator.createAction({
             endpoint: this.endpoint,
-            id,
+            id: this.getTransformedId(id),
             operation,
             method,
         });
