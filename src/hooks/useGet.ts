@@ -27,7 +27,7 @@ export const useGet = <
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
     const loading = useSelector((state: RootState) => {
-        return StateHelper.getLoading(state, operation, RequestMethod.Get);
+        return StateHelper.getLoading(state, operation, RequestMethod.Get, id);
     });
     const record = useSelector((state: RootState) => {
         return (apiActionHandler.apiSelector.getSingle(
