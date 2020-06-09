@@ -144,7 +144,8 @@ export class ApiActionCreator {
     ): string {
         let trailingSlashEndpoint = endpoint.toString();
         if (endpoint.substr(-1) !== "/") {
-            trailingSlashEndpoint = `${endpoint}/`;
+            // Removed trailing slash, perhaps should be an option to add it or not?
+            trailingSlashEndpoint = `${endpoint}`;
         }
 
         if (id === undefined && endPathModifier === undefined) {
