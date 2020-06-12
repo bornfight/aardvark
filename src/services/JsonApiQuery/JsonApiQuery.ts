@@ -112,11 +112,11 @@ export class JsonApiQuery {
         const { pageNumber, pageSize } = paginationConfig;
 
         if (pageNumber !== undefined) {
-            urlSearchParams.append("page[number]", pageNumber.toString());
+            urlSearchParams.append("pageNumber", pageNumber.toString());
         }
 
         if (pageSize !== undefined) {
-            urlSearchParams.append("page[size]", pageSize.toString());
+            urlSearchParams.append("pageSize", pageSize.toString());
         }
     }
 
