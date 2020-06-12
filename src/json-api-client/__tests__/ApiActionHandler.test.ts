@@ -80,9 +80,9 @@ describe("ApiActionHandler", () => {
             const { reject, resolve, requestConfig, ...rest } = calledAction;
 
             expect(rest).toEqual({
-                type: "@@api/INITIAL_GET_FOO_PAGE[NUMBER]=10&PAGE[SIZE]=100",
+                type: "@@api/INITIAL_GET_FOO_PAGENUMBER=10&PAGESIZE=100",
                 apiActionType: "jsonApiRequest",
-                operation: "GET_FOO_PAGE[NUMBER]=10&PAGE[SIZE]=100",
+                operation: "GET_FOO_PAGENUMBER=10&PAGESIZE=100",
                 status: "begin",
                 endpoint: "/foo/",
                 method: "get",
@@ -91,7 +91,7 @@ describe("ApiActionHandler", () => {
             expect(reject).toEqual(expect.any(Function));
             expect(resolve).toEqual(expect.any(Function));
             expect(decodeURIComponent(requestConfig.params.toString())).toEqual(
-                "page[number]=10&page[size]=100",
+                "pageNumber=10&pageSize=100",
             );
         });
 
