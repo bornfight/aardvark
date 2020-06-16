@@ -9,7 +9,6 @@ export interface CreateApiActionConfigParam {
     operation: Operation | ApiOperation;
     endpoint: Endpoint;
     id?: string;
-    endPathModifier?: string;
     method?: RequestMethod;
     requestConfig?: AxiosRequestConfig;
     apiActionType?: ApiActionType;

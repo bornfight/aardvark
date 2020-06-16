@@ -63,7 +63,6 @@ export class ApiActionCreator {
         method,
         id,
         requestConfig,
-        endPathModifier,
         resolve = () => {
             return;
         },
@@ -80,11 +79,7 @@ export class ApiActionCreator {
             operationValue = id ? `${operation}_${id}` : operation;
         }
 
-        const formattedEndpoint = ApiActionCreator.createEndpoint(
-            endpoint,
-            id,
-            endPathModifier,
-        );
+        const formattedEndpoint = ApiActionCreator.createEndpoint(endpoint, id);
 
         return {
             // todo: maybe simplify this to not include whole query?
@@ -137,29 +132,14 @@ export class ApiActionCreator {
         };
     }
 
-    private static createEndpoint(
-        endpoint: Endpoint,
-        id?: string,
-        endPathModifier?: string,
-    ): string {
-        let trailingSlashEndpoint = endpoint.toString();
-        if (endpoint.substr(-1) !== "/") {
-            // Removed trailing slash, perhaps should be an option to add it or not?
-            trailingSlashEndpoint = `${endpoint}`;
-        }
+    private static createEndpoint(endpoint: Endpoint, id?: string): string {
+        const trailingSlashEndpoint =
+            endpoint.substr(-1) === "/" ? endpoint : `${endpoint}/`;
 
-        if (id === undefined && endPathModifier === undefined) {
-            return trailingSlashEndpoint;
-        }
-
-        if (id === undefined) {
-            return `${trailingSlashEndpoint}${endPathModifier}`;
-        }
-
-        if (endPathModifier === undefined) {
+        if (id !== undefined && id !== "") {
             return `${trailingSlashEndpoint}${id}`;
         }
 
-        return `${trailingSlashEndpoint}${id}/${endPathModifier}`;
+        return endpoint.replace(/\/$/, "");
     }
 }
