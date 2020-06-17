@@ -16,6 +16,7 @@ import { ApiThunkAction } from "./interfaces/ApiThunkAction";
 import { ApiOperation } from "./ApiOperation/ApiOperation";
 import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
+import { ActionPostData, PostRawData } from "./interfaces/ActionPostData";
 
 export class ApiActionHandler<T extends JSONAModel> {
     public readonly jsonaDataFormatter = new JsonaDataFormatter();
@@ -66,17 +67,28 @@ export class ApiActionHandler<T extends JSONAModel> {
         }).getValue();
     }
 
-    public create(
-        serializeModelParam: SerializeJsonApiModelPostParam,
-    ): ApiThunkAction {
-        const serializedData = this.jsonaDataFormatter.serializeWithInlineRelationships(
-            serializeModelParam,
-        );
+    public create(data: ActionPostData): ApiThunkAction {
         const method = RequestMethod.Post;
         const operation = new ApiOperation({
             resourceType: this.resourceType,
             method,
         });
+
+        const rawData = (data as PostRawData).rawData;
+        if (rawData !== undefined) {
+            return ApiActionCreator.createAction({
+                endpoint: this.endpoint,
+                operation,
+                method,
+                requestConfig: { data: rawData },
+            });
+        }
+
+        const { model, includeNames } = data as SerializeJsonApiModelPostParam;
+
+        const serializedData = this.jsonaDataFormatter.serializeWithInlineRelationships(
+            { model, includeNames },
+        );
 
         return ApiActionCreator.createAction({
             endpoint: this.endpoint,
