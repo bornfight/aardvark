@@ -15,6 +15,7 @@ export class JsonApiQuery {
     private readonly customParams: CustomParam[];
     private readonly sortKeyName: string;
     private readonly preventSortOrderTransformation?: boolean;
+    private readonly preventDefaultSort?: boolean;
     private urlSearchParams = new URLSearchParams();
 
     constructor(config: JsonApiQueryConfig) {
@@ -27,6 +28,7 @@ export class JsonApiQuery {
         this.sortKeyName = config.sortKeyName || "sort";
         this.preventSortOrderTransformation =
             config.preventSortOrderTransformation || undefined;
+        this.preventDefaultSort = config.preventDefaultSort || undefined;
 
         this.init();
     }
@@ -82,6 +84,9 @@ export class JsonApiQuery {
 
     private appendSortQuery() {
         const sortQuery = this.getSortQuery();
+        if (this.preventDefaultSort) {
+            return;
+        }
         if (sortQuery !== "") {
             this.urlSearchParams.append(this.sortKeyName, sortQuery);
         }

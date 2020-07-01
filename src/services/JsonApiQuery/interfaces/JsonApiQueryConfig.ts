@@ -11,4 +11,5 @@ export interface JsonApiQueryConfig {
     customParams?: CustomParam[];
     sortKeyName?: string;
     preventSortOrderTransformation?: boolean;
+    preventDefaultSort?: boolean;
 }
