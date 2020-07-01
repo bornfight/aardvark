@@ -1,4 +1,5 @@
 import { AxiosRequestConfig } from "axios";
+import { CustomSortConfig } from "../../services/JsonApiQuery/interfaces/CustomSortConfig";
 import { FilterConfig } from "./interfaces/FilterConfig";
 import { JsonApiQueryConfig } from "./interfaces/JsonApiQueryConfig";
 import { SortConfig } from "./interfaces/SortConfig";
@@ -16,6 +17,9 @@ export class JsonApiQuery {
     private readonly sortKeyName: string;
     private readonly preventSortOrderTransformation?: boolean;
     private readonly preventDefaultSort?: boolean;
+    private readonly customGetSortQuery?: (
+        sortConfig: SortConfig,
+    ) => CustomSortConfig;
     private urlSearchParams = new URLSearchParams();
 
     constructor(config: JsonApiQueryConfig) {
@@ -29,6 +33,7 @@ export class JsonApiQuery {
         this.preventSortOrderTransformation =
             config.preventSortOrderTransformation || undefined;
         this.preventDefaultSort = config.preventDefaultSort || undefined;
+        this.customGetSortQuery = config.customGetSortQuery || undefined;
 
         this.init();
     }
@@ -83,6 +88,21 @@ export class JsonApiQuery {
     }
 
     private appendSortQuery() {
+        if (this.customGetSortQuery) {
+            if (this.sortConfig === undefined) {
+                throw new Error(
+                    "If using 'customGetSortQuery' prop, you must also use 'sortConfig'",
+                );
+            }
+            const customSortQuery: CustomSortConfig = this.customGetSortQuery(
+                this.sortConfig,
+            );
+            this.urlSearchParams.append(
+                customSortQuery.value,
+                customSortQuery.order,
+            );
+            return;
+        }
         const sortQuery = this.getSortQuery();
         if (this.preventDefaultSort) {
             return;

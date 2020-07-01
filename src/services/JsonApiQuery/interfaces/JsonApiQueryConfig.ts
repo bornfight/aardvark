@@ -1,3 +1,4 @@
+import { CustomSortConfig } from "../../../services/JsonApiQuery/interfaces/CustomSortConfig";
 import { SortConfig } from "./SortConfig";
 import { FilterConfig } from "./FilterConfig";
 import { PaginationConfig } from "../../../json-api-client/interfaces/PaginationConfig";
@@ -12,4 +13,5 @@ export interface JsonApiQueryConfig {
     sortKeyName?: string;
     preventSortOrderTransformation?: boolean;
     preventDefaultSort?: boolean;
+    customGetSortQuery?: (sortConfig: SortConfig) => CustomSortConfig;
 }
