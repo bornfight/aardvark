@@ -10,4 +10,5 @@ export interface JsonApiQueryConfig {
     paginationConfig?: PaginationConfig;
     customParams?: CustomParam[];
     sortKeyName?: string;
+    preventSortOrderTransformation?: boolean;
 }
