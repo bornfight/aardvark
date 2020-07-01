@@ -8,9 +8,8 @@ export class StateHelper {
         state: RootState,
         operation: Operation,
         requestMethod: RequestMethod,
-        id?: string,
     ) {
-        const meta = StateHelper.getMeta(state, operation, requestMethod, id);
+        const meta = StateHelper.getMeta(state, operation, requestMethod);
 
         if (meta === undefined) {
             return [];
@@ -29,12 +28,8 @@ export class StateHelper {
         state: RootState,
         operation: Operation,
         requestMethod: RequestMethod,
-        id?: string,
     ) {
-        const methods =
-            id === undefined
-                ? state.apiData.meta[operation]
-                : state.apiData.meta[operation + "_" + id];
+        let methods = state.apiData.meta[operation];
 
         if (methods === undefined) {
             return undefined;
@@ -89,9 +84,8 @@ export class StateHelper {
         state: RootState,
         operation: Operation,
         requestMethod: RequestMethod,
-        id?: string,
     ) {
-        const meta = this.getMeta(state, operation, requestMethod, id);
+        const meta = this.getMeta(state, operation, requestMethod);
 
         if (meta === undefined) {
             return undefined;
@@ -108,9 +102,8 @@ export class StateHelper {
         state: RootState,
         operation: Operation,
         requestMethod: RequestMethod,
-        id?: string,
     ) {
-        const meta = this.getMeta(state, operation, requestMethod, id);
+        const meta = this.getMeta(state, operation, requestMethod);
 
         if (meta === undefined) {
             return false;

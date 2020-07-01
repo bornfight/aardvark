@@ -38,7 +38,7 @@ export const useGetControlled = <
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
     const loading = useSelector((state: RootState) => {
-        return StateHelper.getLoading(state, operation, RequestMethod.Get, id);
+        return StateHelper.getLoading(state, operation, RequestMethod.Get);
     });
 
     const record = useSelector((state: RootState) => {
