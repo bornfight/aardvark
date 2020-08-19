@@ -15,7 +15,7 @@ export abstract class JsonApiModel<
      * Final keyword would be very helpful here.
      * @see https://github.com/microsoft/TypeScript/issues/8306
      */
-    public readonly id: string | undefined = undefined;
+    public readonly id: string = "";
     // this is intentional to check whether id needs to be persisted to API in JsonaDataFormatter
     // tslint:disable-next-line:variable-name
     public readonly __clientGeneratedEntity: boolean;
