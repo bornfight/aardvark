@@ -70,7 +70,7 @@ export class JsonApiQuery {
             return "";
         }
 
-        const prefix = this.sortConfig.order === "desc" ? "-" : "";
+        const prefix = this.sortConfig.order === "descend" ? "-" : "";
 
         return `${prefix}${this.sortConfig.value}`;
     }
