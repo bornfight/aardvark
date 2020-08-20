@@ -67,7 +67,10 @@ export class ApiActionHandler<T extends JSONAModel> {
         }).getValue();
     }
 
-    public create(data: ActionPostData): ApiThunkAction {
+    public create(
+        data: ActionPostData,
+        additionalUrlParam?: string,
+    ): ApiThunkAction {
         const method = RequestMethod.Post;
         const operation = new ApiOperation({
             resourceType: this.resourceType,
@@ -90,8 +93,13 @@ export class ApiActionHandler<T extends JSONAModel> {
             { model, includeNames },
         );
 
+        let endpoint = this.endpoint;
+        if (additionalUrlParam) {
+            endpoint = this.endpoint + additionalUrlParam;
+        }
+
         return ApiActionCreator.createAction({
-            endpoint: this.endpoint,
+            endpoint,
             operation,
             method,
             requestConfig: { data: serializedData },

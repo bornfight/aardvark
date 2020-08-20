@@ -16,6 +16,7 @@ export const usePost = <
     F = ExtractJSONAModel<T>
 >(
     apiActionHandler: T,
+    additionalUrlParam?: string,
 ): {
     operation: Operation;
     record: F | null;
@@ -28,7 +29,11 @@ export const usePost = <
     const create = useCallback(
         (data: ActionPostData) => {
             return new Promise<JsonApiObject>((resolve, reject) => {
-                dispatch(apiActionHandler.create(data))
+                let action = apiActionHandler.create(data);
+                if (additionalUrlParam) {
+                    action = apiActionHandler.create(data, additionalUrlParam);
+                }
+                dispatch(action)
                     .then((response) => {
                         setId((response?.data as JsonApiObject)?.id || "");
                         resolve(response?.data as JsonApiObject);
