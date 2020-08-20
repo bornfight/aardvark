@@ -33,6 +33,8 @@ export const usePatch = <
             patchId: string,
             serializeModelParam: SerializeJsonApiModelPatchParam<F>,
         ) => {
+            checkValidity(serializeModelParam);
+
             setId(patchId);
             return new Promise<JsonApiObject>((resolve, reject) => {
                 dispatch(apiActionHandler.update(patchId, serializeModelParam))
@@ -62,6 +64,23 @@ export const usePatch = <
             id,
         ) as unknown) as F;
     });
+
+    const checkValidity = (
+        serializeModelParam: SerializeJsonApiModelPatchParam<F>,
+    ) => {
+        if (
+            serializeModelParam?.model?.type === undefined ||
+            serializeModelParam?.model?.id === undefined
+        ) {
+            console.warn(
+                "Wrong JSONA model, both id and type must be present in the model.",
+            );
+        }
+
+        if (serializeModelParam?.includeNames === undefined) {
+            console.warn("includeNames array is missing.");
+        }
+    };
 
     return {
         operation,
