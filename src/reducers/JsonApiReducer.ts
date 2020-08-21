@@ -1,8 +1,8 @@
 import normalize, { JsonApiResponse } from "json-api-normalizer";
 import defaultsDeep from "lodash/defaultsDeep";
+import isEqual from "lodash/isEqual";
 import merge from "lodash/merge";
 import mergeWith from "lodash/mergeWith";
-import isEqual from "lodash/isEqual";
 import {
     ApiDataState,
     ApiModelData,
@@ -10,15 +10,15 @@ import {
     Entity,
     MetaData,
 } from "../interfaces/ApiDataState";
-import { BaseAction } from "../services/ApiActionCreator/interfaces/BaseAction";
-import { ApiReduxAction } from "../services/ApiActionCreator/interfaces/ApiReduxAction";
-import { ActionStatus } from "../services/ApiActionCreator/enums/ActionStatus";
-import { FetchFromApiSuccessAction } from "../services/ApiActionCreator/interfaces/FetchFromApiSuccessAction";
-import { FetchFromApiFailedAction } from "../services/ApiActionCreator/interfaces/FetchFromApiFailedAction";
-import { ApiActionType } from "../services/ApiActionCreator/enums/ApiActionType";
-import { ApiResponse } from "../services/ApiActionCreator/interfaces/ResponseData";
-import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { ResourceType } from "../interfaces/ResourceType";
+import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { ActionStatus } from "../services/ApiActionCreator/enums/ActionStatus";
+import { ApiActionType } from "../services/ApiActionCreator/enums/ApiActionType";
+import { ApiReduxAction } from "../services/ApiActionCreator/interfaces/ApiReduxAction";
+import { BaseAction } from "../services/ApiActionCreator/interfaces/BaseAction";
+import { FetchFromApiFailedAction } from "../services/ApiActionCreator/interfaces/FetchFromApiFailedAction";
+import { FetchFromApiSuccessAction } from "../services/ApiActionCreator/interfaces/FetchFromApiSuccessAction";
+import { ApiResponse } from "../services/ApiActionCreator/interfaces/ResponseData";
 
 interface NormalizedJsonApiResponseData {
     [resourceType: string]: {

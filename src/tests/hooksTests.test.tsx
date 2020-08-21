@@ -1,9 +1,11 @@
 import { renderHook } from "@testing-library/react-hooks";
 import React from "react";
-import { carActionHandler } from "../test-utils/CarActionHandler";
-import { useGet } from "../hooks";
 import { Provider } from "react-redux";
-import { createMockStore } from "../test-utils/createMockStore";
+// import { configureStore } from "../test-utils/configureStore";
+// import axios from "axios";
+import { useGet } from "../hooks";
+import { carActionHandler } from "../test-utils/CarActionHandler";
+import { configureStore } from "../test-utils/configureStore";
 
 const ReduxProvider = ({
     children,
@@ -14,9 +16,12 @@ const ReduxProvider = ({
 }) => <Provider store={reduxStore}>{children}</Provider>;
 
 describe("useGet", () => {
-    const store = createMockStore();
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+    const mockStore = configureStore().store;
     const wrapper = ({ children }: { children: any }) => (
-        <ReduxProvider reduxStore={store}>{children}</ReduxProvider>
+        <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
     );
 
     it("should correctly fetch data with given action handler", () => {
@@ -43,9 +48,6 @@ describe("useGet", () => {
                 wrapper,
             },
         );
-
-        console.log(result);
-        console.log(result.current);
 
         expect(result).toEqual("");
     });
