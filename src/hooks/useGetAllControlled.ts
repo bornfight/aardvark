@@ -1,16 +1,16 @@
-import { ApiActionHandler } from "..";
-import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
+import { JsonApiObject } from "json-api-normalizer";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ApiActionHandler } from "..";
+import { Dispatch } from "../interfaces/Dispatch";
+import { JSONAModel } from "../interfaces/JSONAModel";
+import { Operation } from "../interfaces/Operation";
 import { RootState } from "../interfaces/RootState";
 import { getTotalCount } from "../selectors/apiSelectors";
-import { Operation } from "../interfaces/Operation";
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { ExtractJSONAModel } from "../types/UtilityTypes";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
-import { JsonApiObject } from "json-api-normalizer";
-import { Dispatch } from "../interfaces/Dispatch";
+import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ExtractJSONAModel } from "../types/UtilityTypes";
 
 export const useGetAllControlled = <
     T extends ApiActionHandler<JSONAModel>,
@@ -18,6 +18,7 @@ export const useGetAllControlled = <
 >(
     apiActionHandler: T,
     jsonApiQuery?: JsonApiQuery,
+    headers?: { [key: string]: string },
 ): {
     operation: Operation;
     ids: string[];
@@ -29,7 +30,7 @@ export const useGetAllControlled = <
     const dispatch: Dispatch = useDispatch();
     const getAll = useCallback(() => {
         return new Promise<JsonApiObject[]>((resolve, reject) => {
-            dispatch(apiActionHandler.getAll(jsonApiQuery))
+            dispatch(apiActionHandler.getAll(jsonApiQuery, headers))
                 .then((response) => {
                     resolve(response?.data as JsonApiObject[]);
                 })
