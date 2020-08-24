@@ -38,17 +38,23 @@ describe("useGet", () => {
         });
 
         const { result } = renderHook(
-            () => {
-                const { record, loading } = useGet(carActionHandler, "1");
+            async () => {
+                const { record, loading, operation } = useGet(
+                    carActionHandler,
+                    "1",
+                );
 
                 console.log(record);
                 console.log(loading);
+                console.log(operation);
+
+                return record;
             },
             {
                 wrapper,
             },
         );
 
-        expect(result).toEqual("");
+        expect(result).toEqual(!null);
     });
 });
