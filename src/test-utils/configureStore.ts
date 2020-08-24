@@ -1,27 +1,55 @@
-import { applyMiddleware, createStore, Store } from "redux";
+import { compose, createStore, Store } from "redux";
 import { RecursivePartial } from "../interfaces/RecursivePartial";
 import { RootState } from "../interfaces/RootState";
 import { ApiSaga } from "../sagas/ApiSaga";
 import { createMiddleware } from "./createMiddleware";
 import { rootReducer } from "./rootReducer";
 
+interface ReduxDevToolsConfig {
+    name?: string;
+}
+
+function getComposeEnhancers(config = {}) {
+    // tslint:disable-next-line:no-any
+    const localWindow = window as any;
+    const reduxDevtoolsExtensionCompose =
+        localWindow.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+
+    return (
+        (reduxDevtoolsExtensionCompose &&
+            // trace: true enables viewing the call stack in redux dev tools
+            // disable if it causes performance degradation
+            reduxDevtoolsExtensionCompose({ ...config, trace: true })) ||
+        compose
+    );
+}
+
 export const configureStore = ({
     initialState,
     baseUrl,
+    reduxDevToolsConfig,
 }: {
     initialState?: RecursivePartial<RootState>;
     baseUrl?: string;
+    reduxDevToolsConfig?: ReduxDevToolsConfig;
 } = {}): {
     apiSaga: ApiSaga;
     store: Store;
 } => {
-    const { apiSaga, sagaMiddleware, rootSaga } = createMiddleware(baseUrl);
+    const composeEnhancers = getComposeEnhancers(reduxDevToolsConfig);
+
+    const {
+        apiSaga,
+        sagaMiddleware,
+        rootSaga,
+        storeEnhancer,
+    } = createMiddleware(baseUrl);
 
     const store: Store<RootState> = createStore(
         rootReducer,
         // casted for usage in storybook when partial state is used
         initialState as RootState,
-        applyMiddleware(sagaMiddleware),
+        composeEnhancers(storeEnhancer),
     );
 
     /**
