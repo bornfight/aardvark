@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { useGet } from "../hooks";
 import { carActionHandler } from "../test-utils/CarActionHandler";
 import { configureStore } from "../test-utils/configureStore";
+import MockAdapter from "axios-mock-adapter";
 
 const ReduxProvider = ({
     children,
@@ -16,45 +17,48 @@ const ReduxProvider = ({
 }) => <Provider store={reduxStore}>{children}</Provider>;
 
 describe("useGet", () => {
+    const { store: mockStore, apiSaga } = configureStore();
+
     afterEach(() => {
         jest.resetAllMocks();
     });
-    const mockStore = configureStore().store;
+
     const wrapper = ({ children }: { children: any }) => (
         <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
     );
 
-    it("should correctly fetch data with given action handler", () => {
-        const axios = require("axios");
-        jest.mock("axios");
-        axios.get.mockResolvedValue({
+    it("should correctly fetch data with given action handler", async () => {
+        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        mock.onGet("/cars/1").reply(200, {
             data: {
                 id: "1",
-                type: "Car",
-                brand: "Mercedes",
-                model: "CLA",
-                year: "2020",
+                type: "car",
+                attributes: {
+                    brand: "Mercedes",
+                    model: "CLA",
+                    year: "2020",
+                },
             },
         });
 
-        const { result } = renderHook(
-            async () => {
-                const { record, loading, operation } = useGet(
-                    carActionHandler,
-                    "1",
-                );
-
-                console.log(record);
-                console.log(loading);
-                console.log(operation);
-
-                return record;
-            },
+        const { result, waitForNextUpdate } = renderHook(
+            () => useGet(carActionHandler, "1"),
             {
                 wrapper,
             },
         );
 
-        expect(result).toEqual(!null);
+        expect(result.current.loading).toEqual(true);
+
+        await waitForNextUpdate();
+
+        expect(result.current.loading).toEqual(false);
+        expect(result.current.record).toEqual({
+            id: "1",
+            type: "car",
+            brand: "Mercedes",
+            model: "CLA",
+            year: "2020",
+        });
     });
 });

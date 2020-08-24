@@ -4,9 +4,7 @@ import thunk from "redux-thunk";
 import { ApiSaga } from "../sagas/ApiSaga";
 import { createRootSaga } from "./createRootSaga";
 
-export function createMiddleware(
-    baseUrl?: string,
-): {
+export function createMiddleware(): {
     storeEnhancer: StoreEnhancer;
     apiSaga: ApiSaga;
     sagaMiddleware: SagaMiddleware;
@@ -18,18 +16,11 @@ export function createMiddleware(
     // otherwise creates really hard to track bugs
     const sagaMiddleware = createSagaMiddleware();
     const apiSaga = new ApiSaga({
-        baseURL: baseUrl || (process.env.REACT_APP_API_URL as string),
+        baseURL: "",
     });
     const rootSaga = createRootSaga([apiSaga]);
 
     const middleware = [thunk, sagaMiddleware];
-
-    /**
-     * production only
-     */
-    if (process.env.NODE_ENV === "production") {
-        // e.g. middleware.push(LogRocket.reduxMiddleware());
-    }
 
     const storeEnhancer = applyMiddleware(...middleware);
 
