@@ -1,10 +1,11 @@
 import createCachedSelector from "re-reselect";
-import { RootState } from "../interfaces/RootState";
+import { usePrevious } from "../hooks/usePrevious";
+import { OperationMeta } from "../interfaces/ApiDataState";
 import { Operation } from "../interfaces/Operation";
 import { ResourceType } from "../interfaces/ResourceType";
-import { RequestMethod } from "./enums/RequestMethod";
-import { OperationMeta } from "../interfaces/ApiDataState";
+import { RootState } from "../interfaces/RootState";
 import { deepEqualSelectorCreator } from "./base/deepEqualSelectorCreator";
+import { RequestMethod } from "./enums/RequestMethod";
 
 export const getApiData = (state: RootState) => state.apiData.entities;
 
@@ -75,6 +76,7 @@ export const getTotalCount = createCachedSelector(
     getOperationMeta,
     (operationMeta): number | undefined => {
         let total: unknown;
+        const prevCount = usePrevious(total);
         if (operationMeta && operationMeta.dataMeta) {
             total =
                 operationMeta.dataMeta.total ||
@@ -83,11 +85,11 @@ export const getTotalCount = createCachedSelector(
         }
 
         if (typeof total === "string" && total.length > 0) {
-            return Number(total);
+            return Number(prevCount);
         }
 
         if (typeof total === "number") {
-            return total;
+            return prevCount as number;
         }
 
         return undefined;
