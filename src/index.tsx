@@ -14,6 +14,7 @@ import {
     usePost,
     usePatch,
     useDelete,
+    useRequest,
 } from "./hooks";
 import { FuzzySearchType } from "./enums/FuzzySearchType";
 import { JsonApiQuery } from "./services/JsonApiQuery/JsonApiQuery";
@@ -57,6 +58,7 @@ export {
     usePost,
     usePatch,
     useDelete,
+    useRequest,
     FuzzySearchType,
     JsonApiQuery,
     JsonApiQueryConfig,

@@ -5,6 +5,7 @@ import { useGetControlled } from "./useGetControlled";
 import { usePost } from "./usePost";
 import { usePatch } from "./usePatch";
 import { useDelete } from "./useDelete";
+import { useRequest } from "./useRequest";
 
 export {
     useGetAll,
@@ -14,4 +15,5 @@ export {
     useDelete,
     useGetAllControlled,
     useGetControlled,
+    useRequest,
 };
