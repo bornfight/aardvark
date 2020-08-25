@@ -1,22 +1,22 @@
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { JsonaDataFormatter } from "./JsonaDataFormatter";
-import { ApiOperationUtility } from "./utilities/ApiOperationUtility";
-import { ResourceType } from "../interfaces/ResourceType";
 import { Endpoint } from "../interfaces/Endpoint";
-import { BaseApiSelector } from "../selectors/base/BaseApiSelector";
-import { RootState } from "../interfaces/RootState";
-import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { JSONAModel } from "../interfaces/JSONAModel";
 import { Operation } from "../interfaces/Operation";
-import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ResourceType } from "../interfaces/ResourceType";
+import { RootState } from "../interfaces/RootState";
 import {
     SerializeJsonApiModelParam,
     SerializeJsonApiModelPostParam,
 } from "../interfaces/SerializeJsonApiModelParam";
-import { ApiThunkAction } from "./interfaces/ApiThunkAction";
-import { ApiOperation } from "./ApiOperation/ApiOperation";
+import { BaseApiSelector } from "../selectors/base/BaseApiSelector";
+import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ApiOperation } from "./ApiOperation/ApiOperation";
 import { ActionPostData, PostRawData } from "./interfaces/ActionPostData";
+import { ApiThunkAction } from "./interfaces/ApiThunkAction";
+import { JsonaDataFormatter } from "./JsonaDataFormatter";
+import { ApiOperationUtility } from "./utilities/ApiOperationUtility";
 
 export class ApiActionHandler<T extends JSONAModel> {
     public readonly jsonaDataFormatter = new JsonaDataFormatter();
@@ -106,7 +106,10 @@ export class ApiActionHandler<T extends JSONAModel> {
         });
     }
 
-    public getAll(jsonApiQuery?: JsonApiQuery): ApiThunkAction {
+    public getAll(
+        jsonApiQuery?: JsonApiQuery,
+        additionalUrlParam?: string,
+    ): ApiThunkAction {
         const method = RequestMethod.Get;
         const operation = new ApiOperation({
             resourceType: this.resourceType,
@@ -114,8 +117,13 @@ export class ApiActionHandler<T extends JSONAModel> {
             jsonApiQuery,
         });
 
+        let endpoint = this.endpoint;
+        if (additionalUrlParam) {
+            endpoint = this.endpoint + additionalUrlParam;
+        }
+
         const config = {
-            endpoint: this.endpoint,
+            endpoint,
             operation,
             method: RequestMethod.Get,
             requestConfig: jsonApiQuery && jsonApiQuery.getRequestConfig(),
@@ -124,7 +132,11 @@ export class ApiActionHandler<T extends JSONAModel> {
         return ApiActionCreator.createAction(config);
     }
 
-    public get(id: string, includes: string[] = []): ApiThunkAction {
+    public get(
+        id: string,
+        includes: string[] = [],
+        additionalUrlParam?: string,
+    ): ApiThunkAction {
         const jsonApiQuery = new JsonApiQuery({ includes });
         const method = RequestMethod.Get;
         const operation = new ApiOperation({
@@ -133,8 +145,13 @@ export class ApiActionHandler<T extends JSONAModel> {
             id,
         });
 
+        let endpoint = this.endpoint;
+        if (additionalUrlParam) {
+            endpoint = this.endpoint + additionalUrlParam;
+        }
+
         return ApiActionCreator.createAction({
-            endpoint: this.endpoint,
+            endpoint,
             id: this.getTransformedId(id),
             operation,
             method,

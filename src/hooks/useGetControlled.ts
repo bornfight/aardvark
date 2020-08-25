@@ -1,14 +1,14 @@
-import { ApiActionHandler } from "..";
+import { JsonApiObject } from "json-api-normalizer";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StateHelper } from "../services/StateHelper/StateHelper";
-import { RootState } from "../interfaces/RootState";
-import { Operation } from "../interfaces/Operation";
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { ExtractJSONAModel } from "../types/UtilityTypes";
-import { RequestMethod } from "../selectors/enums/RequestMethod";
-import { JsonApiObject } from "json-api-normalizer";
+import { ApiActionHandler } from "..";
 import { Dispatch } from "../interfaces/Dispatch";
+import { JSONAModel } from "../interfaces/JSONAModel";
+import { Operation } from "../interfaces/Operation";
+import { RootState } from "../interfaces/RootState";
+import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ExtractJSONAModel } from "../types/UtilityTypes";
 
 export const useGetControlled = <
     T extends ApiActionHandler<JSONAModel>,
@@ -17,6 +17,7 @@ export const useGetControlled = <
     apiActionHandler: T,
     id: string,
     includes?: string[],
+    additionalUrlParam?: string,
 ): {
     operation: Operation;
     record: F;
@@ -26,7 +27,12 @@ export const useGetControlled = <
     const dispatch: Dispatch = useDispatch();
     const getSingle = useCallback(() => {
         return new Promise<JsonApiObject>((resolve, reject) => {
-            dispatch(apiActionHandler.get(id, includes))
+            let action = apiActionHandler.get(id, includes);
+            if (additionalUrlParam) {
+                action = apiActionHandler.get(id, includes, additionalUrlParam);
+            }
+
+            dispatch(action)
                 .then((response) => {
                     resolve(response?.data as JsonApiObject);
                 })

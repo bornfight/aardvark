@@ -1,14 +1,14 @@
-import { ApiActionHandler } from "..";
-import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ApiActionHandler } from "..";
+import { JSONAModel } from "../interfaces/JSONAModel";
+import { Operation } from "../interfaces/Operation";
 import { RootState } from "../interfaces/RootState";
 import { getTotalCount } from "../selectors/apiSelectors";
-import { Operation } from "../interfaces/Operation";
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { ExtractJSONAModel } from "../types/UtilityTypes";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ExtractJSONAModel } from "../types/UtilityTypes";
 
 export const useGetAll = <
     T extends ApiActionHandler<JSONAModel>,
@@ -16,6 +16,7 @@ export const useGetAll = <
 >(
     apiActionHandler: T,
     jsonApiQuery?: JsonApiQuery,
+    additionalUrlParam?: string,
 ): {
     operation: Operation;
     ids: string[];
@@ -24,8 +25,12 @@ export const useGetAll = <
     count: number | undefined;
 } => {
     const dispatch = useDispatch();
+    let action = apiActionHandler.getAll(jsonApiQuery);
+    if (additionalUrlParam) {
+        action = apiActionHandler.getAll(jsonApiQuery, additionalUrlParam);
+    }
     useEffect(() => {
-        dispatch(apiActionHandler.getAll(jsonApiQuery));
+        dispatch(action);
     }, [apiActionHandler, jsonApiQuery, dispatch]);
 
     const operation = apiActionHandler.operationUtility.getOperationGetAll(

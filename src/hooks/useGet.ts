@@ -1,12 +1,12 @@
-import { ApiActionHandler } from "..";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StateHelper } from "../services/StateHelper/StateHelper";
-import { RootState } from "../interfaces/RootState";
-import { Operation } from "../interfaces/Operation";
+import { ApiActionHandler } from "..";
 import { JSONAModel } from "../interfaces/JSONAModel";
-import { ExtractJSONAModel } from "../types/UtilityTypes";
+import { Operation } from "../interfaces/Operation";
+import { RootState } from "../interfaces/RootState";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ExtractJSONAModel } from "../types/UtilityTypes";
 
 export const useGet = <
     T extends ApiActionHandler<JSONAModel>,
@@ -15,14 +15,20 @@ export const useGet = <
     apiActionHandler: T,
     id: string,
     includes?: string[],
+    additionalUrlParam?: string,
 ): {
     operation: Operation;
     record: F | null;
     loading: boolean;
 } => {
     const dispatch = useDispatch();
+    let action = apiActionHandler.get(id, includes);
+    if (additionalUrlParam) {
+        action = apiActionHandler.get(id, includes, additionalUrlParam);
+    }
+
     useEffect(() => {
-        dispatch(apiActionHandler.get(id, includes));
+        dispatch(action);
     }, [apiActionHandler, id, includes, dispatch]);
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
