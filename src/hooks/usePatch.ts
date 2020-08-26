@@ -37,6 +37,12 @@ export const usePatch = <
             return new Promise<JsonApiObject>((resolve, reject) => {
                 dispatch(apiActionHandler.update(patchId, serializeModelParam))
                     .then((response) => {
+                        // fetch updated, triggers store update
+                        dispatch(
+                            apiActionHandler.get(
+                                (response?.data as JsonApiObject)?.id,
+                            ),
+                        );
                         resolve(response?.data as JsonApiObject);
                     })
                     .catch((e) => {
