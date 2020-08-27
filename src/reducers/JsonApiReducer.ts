@@ -78,7 +78,11 @@ export class JsonApiReducer {
     private createSuccessState(
         state: ApiDataState,
         action: FetchFromApiSuccessAction,
-    ) {
+    ): ApiDataState {
+        if (action.method === RequestMethod.Delete) {
+            return { meta: {}, html: {}, entities: {} };
+        }
+
         if (action.apiActionType === ApiActionType.HtmlRequest) {
             return this.createSuccessStateForHTML(state, action);
         }

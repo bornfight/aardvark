@@ -27,13 +27,13 @@ describe("usePatch", () => {
     it("should patch data " + "", async () => {
         const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
 
-        mock.onPatch("/cars").reply(200, {
+        mock.onPatch("/cars/9").reply(200, {
             data: {
                 attributes: {
                     id: "9",
                     type: "car",
-                    brand: "UpdateCar",
-                    model: "URLL",
+                    brand: "UpdatedCar",
+                    model: "ULL",
                     year: "2022",
                 },
             },
@@ -49,22 +49,24 @@ describe("usePatch", () => {
                     model: {
                         id: "9",
                         type: "car",
-                        brand: "UpdateCar",
-                        model: "URLL",
+                        brand: "UpdatedCar",
+                        model: "ULL",
                         year: "2022",
                     },
                     includeNames: [],
                 })
-                .then((response) => console.log(response))
+                .then((response) => response)
                 .catch((err) => {
                     console.log(err);
                 });
-            expect(resultdata).toEqual({
-                id: "9",
-                type: "car",
-                brand: "UpdatedCar",
-                model: "ULL",
-                year: "2022",
+            await expect(resultdata).toEqual({
+                attributes: {
+                    id: "9",
+                    type: "car",
+                    brand: "UpdatedCar",
+                    model: "ULL",
+                    year: "2022",
+                },
             });
         });
     });
