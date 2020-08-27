@@ -1,22 +1,19 @@
 import { renderHook } from "@testing-library/react-hooks";
+import MockAdapter from "axios-mock-adapter";
 import React from "react";
 import { Provider } from "react-redux";
-// import { configureStore } from "../test-utils/configureStore";
-// import axios from "axios";
 import { useGet } from "../hooks";
 import { carActionHandler } from "../test-utils/CarActionHandler";
 import { configureStore } from "../test-utils/configureStore";
-import MockAdapter from "axios-mock-adapter";
-
-const ReduxProvider = ({
-    children,
-    reduxStore,
-}: {
-    children: any;
-    reduxStore: any;
-}) => <Provider store={reduxStore}>{children}</Provider>;
 
 describe("useGet", () => {
+    const ReduxProvider = ({
+        children,
+        reduxStore,
+    }: {
+        children: any;
+        reduxStore: any;
+    }) => <Provider store={reduxStore}>{children}</Provider>;
     const { store: mockStore, apiSaga } = configureStore();
 
     afterEach(() => {
@@ -34,8 +31,8 @@ describe("useGet", () => {
                 id: "1",
                 type: "car",
                 attributes: {
-                    brand: "Mercedes",
-                    model: "CLA",
+                    brand: "GetCar",
+                    model: "GLL",
                     year: "2020",
                 },
             },
@@ -56,8 +53,8 @@ describe("useGet", () => {
         expect(result.current.record).toEqual({
             id: "1",
             type: "car",
-            brand: "Mercedes",
-            model: "CLA",
+            brand: "GetCar",
+            model: "GLL",
             year: "2020",
         });
     });
