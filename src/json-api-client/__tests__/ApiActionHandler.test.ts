@@ -57,7 +57,7 @@ describe("ApiActionHandler", () => {
                 apiActionType: "jsonApiRequest",
                 operation: "GET_FOO",
                 status: "begin",
-                endpoint: "/foo/",
+                endpoint: "/foo",
                 method: "get",
             });
 
@@ -84,7 +84,7 @@ describe("ApiActionHandler", () => {
                 apiActionType: "jsonApiRequest",
                 operation: "GET_FOO_PAGENUMBER=10&PAGESIZE=100",
                 status: "begin",
-                endpoint: "/foo/",
+                endpoint: "/foo",
                 method: "get",
             });
 
@@ -111,7 +111,7 @@ describe("ApiActionHandler", () => {
                 apiActionType: "jsonApiRequest",
                 operation: "GET_FOO_INCLUDE=BAR",
                 status: "begin",
-                endpoint: "/foo/",
+                endpoint: "/foo",
                 method: "get",
             });
 
@@ -251,7 +251,7 @@ describe("ApiActionHandler", () => {
                 apiActionType: "jsonApiRequest",
                 operation: "POST_FOO",
                 status: "begin",
-                endpoint: "/foo/",
+                endpoint: "/foo",
                 method: "post",
             });
 
