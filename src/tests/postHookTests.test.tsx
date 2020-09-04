@@ -113,4 +113,50 @@ describe("usePost", () => {
             });
         });
     });
+
+    it("should post data with rawData and additional URL param ", async () => {
+        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+
+        mock.onPost("/cars/documentation").reply(200, {
+            data: {
+                attributes: {
+                    brand: "PostRawCarDocumentation",
+                    model: "PRLLD",
+                    year: "2020",
+                },
+            },
+        });
+
+        const { result } = renderHook(
+            () => usePost(carActionHandler, "/documentation"),
+            {
+                wrapper,
+            },
+        );
+
+        await act(async () => {
+            const resultdata = await result.current
+                .create({
+                    rawData: {
+                        data: {
+                            attributes: {
+                                brand: "PostRawCarDocumentation",
+                                model: "PRLLD",
+                                year: "2020",
+                            },
+                        },
+                    },
+                })
+                .then((response) => {
+                    return response;
+                });
+            expect(resultdata).toEqual({
+                attributes: {
+                    brand: "PostRawCarDocumentation",
+                    model: "PRLLD",
+                    year: "2020",
+                },
+            });
+        });
+    });
 });

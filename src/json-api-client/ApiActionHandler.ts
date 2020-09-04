@@ -76,11 +76,15 @@ export class ApiActionHandler<T extends JSONAModel> {
             resourceType: this.resourceType,
             method,
         });
+        let endpoint = this.endpoint;
+        if (additionalUrlParam) {
+            endpoint = this.endpoint + additionalUrlParam;
+        }
 
         const rawData = (data as PostRawData).rawData;
         if (rawData !== undefined) {
             return ApiActionCreator.createAction({
-                endpoint: this.endpoint,
+                endpoint,
                 operation,
                 method,
                 requestConfig: { data: rawData },
@@ -92,11 +96,6 @@ export class ApiActionHandler<T extends JSONAModel> {
         const serializedData = this.jsonaDataFormatter.serializeWithInlineRelationships(
             { model, includeNames },
         );
-
-        let endpoint = this.endpoint;
-        if (additionalUrlParam) {
-            endpoint = this.endpoint + additionalUrlParam;
-        }
 
         return ApiActionCreator.createAction({
             endpoint,

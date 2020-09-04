@@ -29,9 +29,11 @@ export const usePost = <
     const create = useCallback(
         (data: ActionPostData) => {
             return new Promise<JsonApiObject>((resolve, reject) => {
-                let action = apiActionHandler.create(data);
+                let action;
                 if (additionalUrlParam) {
                     action = apiActionHandler.create(data, additionalUrlParam);
+                } else {
+                    action = apiActionHandler.create(data);
                 }
                 dispatch(action)
                     .then((response) => {
