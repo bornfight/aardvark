@@ -145,17 +145,13 @@ export class ApiActionHandler<T extends JSONAModel> {
             id,
         });
 
-        let endpoint = this.endpoint;
-        if (additionalUrlParam) {
-            endpoint = this.endpoint + additionalUrlParam;
-        }
-
         return ApiActionCreator.createAction({
-            endpoint,
+            endpoint: this.endpoint,
             id: this.getTransformedId(id),
             operation,
             method,
             requestConfig: jsonApiQuery.getRequestConfig(),
+            additionalUrlParam,
         });
     }
 

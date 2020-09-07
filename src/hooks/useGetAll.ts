@@ -31,7 +31,7 @@ export const useGetAll = <
     }
     useEffect(() => {
         dispatch(action);
-    }, [apiActionHandler, jsonApiQuery, dispatch]);
+    }, [apiActionHandler, jsonApiQuery, dispatch, action]);
 
     const operation = apiActionHandler.operationUtility.getOperationGetAll(
         jsonApiQuery,

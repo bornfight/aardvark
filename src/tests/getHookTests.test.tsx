@@ -64,6 +64,31 @@ describe("useGet", () => {
         });
     });
 
+    it("should properly fetch with useGet and additional URL param", async () => {
+        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        mock.onGet("/cars/11/details").reply(200, {
+            data: {
+                numberOfSameModels: 10,
+            },
+        });
+        const { result, waitForNextUpdate } = renderHook(
+            () => useGet(carActionHandler, "11", undefined, "/details"),
+            {
+                wrapper,
+            },
+        );
+
+        await act(async () => {
+            await waitForNextUpdate();
+        });
+
+        act(() => {
+            console.log(result.error);
+            console.log(result.current);
+            expect(result.current.record).toEqual({ numberOfSameModels: 10 });
+        });
+    });
+
     it("should correctly fetch data with given action handler - useGetAll", async () => {
         const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
         mock.onGet("/cars").reply(200, {
@@ -162,16 +187,20 @@ describe("useGet", () => {
                 {
                     id: "4",
                     type: "car",
-                    brand: "GetCar",
-                    model: "GLL4",
-                    year: "2020",
+                    attributes: {
+                        brand: "GetCar",
+                        model: "GLL4",
+                        year: "2020",
+                    },
                 },
                 {
                     id: "5",
                     type: "car",
-                    brand: "GetCar",
-                    model: "GLL5",
-                    year: "2021",
+                    attributes: {
+                        brand: "GetCar",
+                        model: "GLL5",
+                        year: "2021",
+                    },
                 },
             ],
         });
@@ -186,8 +215,6 @@ describe("useGet", () => {
         await act(async () => {
             await result.current.getAll();
         });
-
-        console.log(result.current);
 
         act(() => {
             expect(result.current.collection).toEqual([

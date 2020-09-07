@@ -1,3 +1,4 @@
+import { ApiThunkAction } from "../json-api-client/interfaces/ApiThunkAction";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ApiActionHandler } from "..";
@@ -22,14 +23,16 @@ export const useGet = <
     loading: boolean;
 } => {
     const dispatch = useDispatch();
-    let action = apiActionHandler.get(id, includes);
+    let action: ApiThunkAction | undefined = undefined;
     if (additionalUrlParam) {
         action = apiActionHandler.get(id, includes, additionalUrlParam);
+    } else {
+        action = apiActionHandler.get(id, includes);
     }
 
     useEffect(() => {
         dispatch(action);
-    }, [apiActionHandler, id, includes, dispatch]);
+    }, [apiActionHandler, id, includes, dispatch, action]);
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
     const loading = useSelector((state: RootState) => {

@@ -69,6 +69,7 @@ export class ApiActionCreator {
         reject = () => {
             return;
         },
+        additionalUrlParam,
         apiActionType = ApiActionType.JsonApiRequest,
     }: CreateApiActionConfigParam): ApiReduxAction {
         let operationValue: string;
@@ -79,7 +80,11 @@ export class ApiActionCreator {
             operationValue = id ? `${operation}_${id}` : operation;
         }
 
-        const formattedEndpoint = ApiActionCreator.createEndpoint(endpoint, id);
+        const formattedEndpoint = ApiActionCreator.createEndpoint(
+            endpoint,
+            id,
+            additionalUrlParam,
+        );
 
         return {
             // todo: maybe simplify this to not include whole query?
@@ -132,12 +137,29 @@ export class ApiActionCreator {
         };
     }
 
-    private static createEndpoint(endpoint: Endpoint, id?: string): string {
+    private static createEndpoint(
+        endpoint: Endpoint,
+        id?: string,
+        additionalUrlParam?: string,
+    ): string {
         const trailingSlashEndpoint =
             endpoint.substr(-1) === "/" ? endpoint : `${endpoint}/`;
 
+        if (
+            id !== undefined &&
+            id !== "" &&
+            additionalUrlParam !== undefined &&
+            additionalUrlParam !== ""
+        ) {
+            return `${trailingSlashEndpoint}${id}${additionalUrlParam}`;
+        }
+
         if (id !== undefined && id !== "") {
             return `${trailingSlashEndpoint}${id}`;
+        }
+
+        if (additionalUrlParam !== undefined && additionalUrlParam !== "") {
+            return `${trailingSlashEndpoint}${additionalUrlParam}`;
         }
 
         return endpoint.replace(/\/$/, "");

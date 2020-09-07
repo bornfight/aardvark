@@ -45,7 +45,7 @@ export const useGetAllControlled = <
                     reject(e);
                 });
         });
-    }, [apiActionHandler, dispatch, jsonApiQuery]);
+    }, [apiActionHandler, dispatch, jsonApiQuery, additionalUrlParam]);
 
     const operation = apiActionHandler.operationUtility.getOperationGetAll(
         jsonApiQuery,
