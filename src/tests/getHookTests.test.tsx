@@ -2,6 +2,7 @@ import { act, renderHook } from "@testing-library/react-hooks";
 import MockAdapter from "axios-mock-adapter";
 import React from "react";
 import { Provider } from "react-redux";
+import { AardvarkProvider } from "../test-utils/AardvarkProvider";
 import {
     useGet,
     useGetAll,
@@ -19,18 +20,20 @@ describe("useGet", () => {
         children: any;
         reduxStore: any;
     }) => <Provider store={reduxStore}>{children}</Provider>;
-    const { store: mockStore, apiSaga } = configureStore();
+    const { store: mockStore, aardvark } = configureStore();
 
     afterEach(() => {
         jest.resetAllMocks();
     });
 
     const wrapper = ({ children }: { children: any }) => (
-        <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
+        <AardvarkProvider httpAdapter={aardvark.apiService.httpAdapter}>
+            <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
+        </AardvarkProvider>
     );
 
     it("should correctly fetch data with given action handler  - useGet", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
         mock.onGet("/cars/1").reply(200, {
             data: {
                 id: "1",
@@ -65,7 +68,7 @@ describe("useGet", () => {
     });
 
     it("should correctly fetch data with given action handler - useGetAll", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
         mock.onGet("/cars").reply(200, {
             data: [
                 {
@@ -120,7 +123,7 @@ describe("useGet", () => {
     });
 
     it("should correctly fetch data with given action handler - useGetControlled", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
         mock.onGet("/cars/3").reply(200, {
             data: {
                 id: "3",
@@ -156,7 +159,7 @@ describe("useGet", () => {
     });
 
     it("should correctly fetch data with given action handler - useGetAllControlled", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
         mock.onGet("/cars").reply(200, {
             data: [
                 {

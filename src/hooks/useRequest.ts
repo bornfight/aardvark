@@ -1,49 +1,50 @@
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { ApiActionCreator, apiSelectors } from "..";
-import { RootState } from "../interfaces/RootState";
-import { RequestMethod } from "../selectors/enums/RequestMethod";
-import { StateHelper } from "../services/StateHelper/StateHelper";
+import {
+    AxiosError,
+    AxiosInstance,
+    AxiosRequestConfig,
+    AxiosResponse,
+} from "axios";
+import { useState } from "react";
 
 export const useRequest = (
+    // from new Aardvark.ApiService.httpAdapter
+    axiosInstance: AxiosInstance,
     axiosConfig: AxiosRequestConfig,
 ): {
+    request: () => void;
     data: AxiosResponse;
+    requestInfo: any;
     error: AxiosError;
     loading: boolean;
-    meta: any;
 } => {
     const [data, setData] = useState<any>(undefined);
+    const [requestInfo, setRequestInfo] = useState<any>(undefined);
     const [error, setError] = useState<any>(undefined);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const dispatch = useDispatch();
+    const request = () => {
+        setLoading(true);
 
-    const operation = "useRequestOperation";
-    const action = ApiActionCreator.createAction({
-        endpoint: axiosConfig.url || "",
-        operation,
-        requestConfig: axiosConfig,
-        resolve: (responseData) => setData(responseData),
-        reject: (errorData) => setError(errorData),
-    });
+        axiosInstance
+            .request(axiosConfig)
+            .then((response) => {
+                const { data, ...rest } = response;
+                setData(data);
+                setRequestInfo(rest);
 
-    useEffect(() => {
-        dispatch(action);
-    }, []);
-
-    const loading = useSelector((state: RootState) => {
-        return StateHelper.getLoading(state, operation, RequestMethod.Get);
-    });
-
-    const meta = useSelector((state: RootState) => {
-        return apiSelectors.getOperationMeta(state, operation);
-    });
+                setLoading(false);
+            })
+            .catch((error) => {
+                setError(error);
+                setLoading(false);
+            });
+    };
 
     return {
+        request,
         data,
+        requestInfo,
         error,
         loading,
-        meta,
     };
 };

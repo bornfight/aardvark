@@ -19,7 +19,8 @@
         "test": "tsdx test --passWithNoTests",
         "test:watch": "tsdx test --watch",
         "lint": "tsdx lint src",
-        "prepare": "tsdx build"
+        "prepare": "tsdx build",
+        "format-with-prettier": "prettier --write src/**/*.{ts,tsx}"
     },
     "peerDependencies": {
         "react": ">=16",

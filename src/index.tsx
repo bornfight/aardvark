@@ -41,6 +41,7 @@ import {
 } from "./normalizers/JSONANormalizer";
 import { ApiDataState } from "./interfaces/ApiDataState";
 import { JsonApiData } from "./json-api-client/interfaces/JsonApiData";
+import { Aardvark } from "./Aardvark";
 
 export {
     ApiSaga,
@@ -82,4 +83,5 @@ export {
     Normalizer,
     ApiDataState,
     JsonApiData,
+    Aardvark,
 };

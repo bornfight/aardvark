@@ -14,7 +14,7 @@ describe("useDelete", () => {
         children: any;
         reduxStore: any;
     }) => <Provider store={reduxStore}>{children}</Provider>;
-    const { store: mockStore, apiSaga } = configureStore();
+    const { store: mockStore, aardvark } = configureStore();
 
     afterEach(() => {
         jest.resetAllMocks();
@@ -25,7 +25,7 @@ describe("useDelete", () => {
     );
 
     it("should delete data " + "", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
 
         // returned data is null or undefined on delete actions
         // thus 204 status - No content returned success status

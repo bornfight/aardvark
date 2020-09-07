@@ -14,7 +14,7 @@ describe("usePatch", () => {
         children: any;
         reduxStore: any;
     }) => <Provider store={reduxStore}>{children}</Provider>;
-    const { store: mockStore, apiSaga } = configureStore();
+    const { store: mockStore, aardvark } = configureStore();
 
     afterEach(() => {
         jest.resetAllMocks();
@@ -25,7 +25,7 @@ describe("usePatch", () => {
     );
 
     it("should patch data " + "", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
 
         mock.onPatch("/cars/9").reply(200, {
             data: {

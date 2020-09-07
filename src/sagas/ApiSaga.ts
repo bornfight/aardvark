@@ -6,16 +6,10 @@ import { Saga } from "../interfaces/Saga";
 import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 import { ApiStatusTypePrefix } from "../services/ApiActionCreator/enums/ApiStatusTypePrefix";
 import { ApiReduxAction } from "../services/ApiActionCreator/interfaces/ApiReduxAction";
-import {
-    ApiService,
-    ApiServiceConstructorOptions,
-} from "../services/ApiService/apiService";
+import { ApiService } from "../services/ApiService/apiService";
 
 export class ApiSaga implements Saga {
-    public readonly apiService: ApiService;
-    constructor(apiServiceOptions: ApiServiceConstructorOptions) {
-        this.apiService = new ApiService(apiServiceOptions);
-    }
+    constructor(private apiService: ApiService) {}
 
     @autobind
     public *run() {
