@@ -1,10 +1,13 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
 import { Dispatch } from "../interfaces/Dispatch";
 import { RootState } from "../interfaces/RootState";
 import { RecursivePartial } from "../interfaces/RecursivePartial";
 
-const middlewares = [thunk];
+const sagaMiddleware = createSagaMiddleware();
+
+const middlewares = [thunk, sagaMiddleware];
 const createStore = configureMockStore<RootState, Dispatch>(middlewares);
 
 // tslint:disable-next-line:max-line-length
