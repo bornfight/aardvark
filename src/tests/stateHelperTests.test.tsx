@@ -67,7 +67,7 @@ describe("useGet", () => {
         });
     });
 
-    it("should correctly fetch request meta without passed id", async () => {
+    it("should correctly fetch request meta with passed id", async () => {
         const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
         mock.onGet("/cars/1").reply(200, {
             data: {
@@ -94,7 +94,12 @@ describe("useGet", () => {
 
         const state = storeResult.current.getState();
         await waitForNextUpdate();
-        const meta = StateHelper.getMeta(state, "GET_CAR_1", RequestMethod.Get);
+        const meta = StateHelper.getMeta(
+            state,
+            "GET_CAR",
+            RequestMethod.Get,
+            "1",
+        );
 
         expect(meta).toEqual({
             loading: true,
