@@ -1,15 +1,15 @@
 import { RootState } from "../../interfaces/RootState";
 import { Operation } from "../../interfaces/Operation";
 import { RequestMethod } from "../../selectors/enums/RequestMethod";
-import { AxiosErrorTransformer } from "../../transformers/AxiosErrorTransformer";
 
 export class StateHelper {
     public static getIdentifiers(
         state: RootState,
         operation: Operation,
         requestMethod: RequestMethod,
+        id?: string,
     ) {
-        const meta = StateHelper.getMeta(state, operation, requestMethod);
+        const meta = StateHelper.getMeta(state, operation, requestMethod, id);
 
         if (meta === undefined) {
             return [];

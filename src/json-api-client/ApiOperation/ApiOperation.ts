@@ -61,8 +61,6 @@ export class ApiOperation {
             operation = this.addJsonApiQuery(operation, jsonApiQuery);
         }
 
-        console.log(operation.toUpperCase());
-
         return operation.toUpperCase();
     }
 
