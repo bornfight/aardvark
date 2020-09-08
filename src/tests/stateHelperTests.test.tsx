@@ -106,4 +106,54 @@ describe("useGet", () => {
             dataMeta: undefined,
         });
     });
+
+    it("should retrieve request meta with arbitrary operation", async () => {
+        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        mock.onGet("/cars/1").reply(200, {
+            data: {
+                id: "1",
+                type: "car",
+                attributes: {
+                    brand: "GetCar",
+                    model: "GLL",
+                    year: "2020",
+                },
+            },
+        });
+
+        const getCarOperation = "FETCH_CAR";
+
+        const getCarAction = {
+            type: `@@api/INITIAL_${getCarOperation}`,
+            operation: getCarOperation,
+            endpoint: "/cars/1",
+            method: RequestMethod.Get,
+            apiActionType: "jsonApiRequest",
+            id: "1",
+        };
+        console.log(getCarAction.operation);
+
+        mockStore.dispatch(getCarAction);
+
+        console.log(getCarAction);
+
+        const state = mockStore.getState();
+
+        const meta = StateHelper.getMeta(
+            state,
+            getCarOperation,
+            RequestMethod.Get,
+            "1",
+        );
+
+        expect(meta).toEqual({
+            loading: false,
+            status: "success",
+            endpoint: "/cars/1",
+            entityIds: ["1"],
+            entities: [{ id: "1", type: "car" }],
+            error: undefined,
+            dataMeta: undefined,
+        });
+    });
 });
