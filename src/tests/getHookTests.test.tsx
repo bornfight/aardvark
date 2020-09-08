@@ -162,16 +162,20 @@ describe("useGet", () => {
                 {
                     id: "4",
                     type: "car",
-                    brand: "GetCar",
-                    model: "GLL4",
-                    year: "2020",
+                    attributes: {
+                        brand: "GetCar",
+                        model: "GLL4",
+                        year: "2020",
+                    },
                 },
                 {
                     id: "5",
                     type: "car",
-                    brand: "GetCar",
-                    model: "GLL5",
-                    year: "2021",
+                    attributes: {
+                        brand: "GetCar",
+                        model: "GLL5",
+                        year: "2021",
+                    },
                 },
             ],
         });
@@ -186,8 +190,6 @@ describe("useGet", () => {
         await act(async () => {
             await result.current.getAll();
         });
-
-        console.log(result.current);
 
         act(() => {
             expect(result.current.collection).toEqual([

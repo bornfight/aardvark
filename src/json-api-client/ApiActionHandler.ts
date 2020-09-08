@@ -1,22 +1,22 @@
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { JsonaDataFormatter } from "./JsonaDataFormatter";
-import { ApiOperationUtility } from "./utilities/ApiOperationUtility";
-import { ResourceType } from "../interfaces/ResourceType";
 import { Endpoint } from "../interfaces/Endpoint";
-import { BaseApiSelector } from "../selectors/base/BaseApiSelector";
-import { RootState } from "../interfaces/RootState";
-import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { JSONAModel } from "../interfaces/JSONAModel";
 import { Operation } from "../interfaces/Operation";
-import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ResourceType } from "../interfaces/ResourceType";
+import { RootState } from "../interfaces/RootState";
 import {
     SerializeJsonApiModelParam,
     SerializeJsonApiModelPostParam,
 } from "../interfaces/SerializeJsonApiModelParam";
-import { ApiThunkAction } from "./interfaces/ApiThunkAction";
-import { ApiOperation } from "./ApiOperation/ApiOperation";
+import { BaseApiSelector } from "../selectors/base/BaseApiSelector";
+import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ApiOperation } from "./ApiOperation/ApiOperation";
 import { ActionPostData, PostRawData } from "./interfaces/ActionPostData";
+import { ApiThunkAction } from "./interfaces/ApiThunkAction";
+import { JsonaDataFormatter } from "./JsonaDataFormatter";
+import { ApiOperationUtility } from "./utilities/ApiOperationUtility";
 
 export class ApiActionHandler<T extends JSONAModel> {
     public readonly jsonaDataFormatter = new JsonaDataFormatter();
