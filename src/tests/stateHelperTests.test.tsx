@@ -9,7 +9,7 @@ import { configureStore } from "../test-utils/configureStore";
 import { ApiActionType } from "../services/ApiActionCreator/enums/ApiActionType";
 import { END } from "redux-saga";
 
-describe("useGet", () => {
+describe("StateHelper", () => {
     const ReduxProvider = ({
         children,
         reduxStore,
