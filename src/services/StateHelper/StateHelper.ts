@@ -28,8 +28,12 @@ export class StateHelper {
         state: RootState,
         operation: Operation,
         requestMethod: RequestMethod,
+        id?: string,
     ) {
-        let methods = state.apiData.meta[operation];
+        const methods =
+            id === undefined
+                ? state.apiData.meta[operation]
+                : state.apiData.meta[operation + "_" + id];
 
         if (methods === undefined) {
             return undefined;
