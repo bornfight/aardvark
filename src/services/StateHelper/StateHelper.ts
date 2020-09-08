@@ -106,8 +106,9 @@ export class StateHelper {
         state: RootState,
         operation: Operation,
         requestMethod: RequestMethod,
+        id?: string,
     ) {
-        const meta = this.getMeta(state, operation, requestMethod);
+        const meta = this.getMeta(state, operation, requestMethod, id);
 
         if (meta === undefined) {
             return false;
