@@ -27,6 +27,7 @@ export const usePost = <
     F = ExtractJSONAModel<T>
 >(
     apiActionHandler: T,
+    headers?: { [key: string]: string },
 ): {
     operation: Operation;
     record: F | null;
@@ -40,7 +41,7 @@ export const usePost = <
         (data: ActionPostData) => {
             checkValidity(data);
             return new Promise<JsonApiObject>((resolve, reject) => {
-                dispatch(apiActionHandler.create(data))
+                dispatch(apiActionHandler.create(data, headers))
                     .then((response) => {
                         setId((response?.data as JsonApiObject)?.id || "");
                         resolve(response?.data as JsonApiObject);

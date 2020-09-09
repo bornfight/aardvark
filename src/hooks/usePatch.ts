@@ -1,15 +1,15 @@
-import { ApiActionHandler } from "..";
+import { JsonApiObject } from "json-api-normalizer";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StateHelper } from "../services/StateHelper/StateHelper";
-import { RootState } from "../interfaces/RootState";
-import { Operation } from "../interfaces/Operation";
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { ExtractJSONAModel } from "../types/UtilityTypes";
-import { SerializeJsonApiModelPatchParam } from "../interfaces/SerializeJsonApiModelParam";
+import { ApiActionHandler } from "..";
 import { Dispatch } from "../interfaces/Dispatch";
-import { JsonApiObject } from "json-api-normalizer";
+import { JSONAModel } from "../interfaces/JSONAModel";
+import { Operation } from "../interfaces/Operation";
+import { RootState } from "../interfaces/RootState";
+import { SerializeJsonApiModelPatchParam } from "../interfaces/SerializeJsonApiModelParam";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ExtractJSONAModel } from "../types/UtilityTypes";
 
 const checkValidity = (
     serializeModelParam: SerializeJsonApiModelPatchParam,
@@ -33,6 +33,7 @@ export const usePatch = <
     F extends JSONAModel = ExtractJSONAModel<T>
 >(
     apiActionHandler: T,
+    headers?: { [key: string]: string },
 ): {
     operation: Operation;
     record: F | null;
@@ -54,7 +55,13 @@ export const usePatch = <
 
             setId(patchId);
             return new Promise<JsonApiObject>((resolve, reject) => {
-                dispatch(apiActionHandler.update(patchId, serializeModelParam))
+                dispatch(
+                    apiActionHandler.update(
+                        patchId,
+                        serializeModelParam,
+                        headers,
+                    ),
+                )
                     .then((response) => {
                         resolve(response?.data as JsonApiObject);
                     })
