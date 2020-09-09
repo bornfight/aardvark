@@ -69,6 +69,7 @@ export class ApiActionHandler<T extends JSONAModel> {
 
     public create(
         data: ActionPostData,
+        headers?: { [key: string]: string },
         additionalUrlParam?: string,
     ): ApiThunkAction {
         const method = RequestMethod.Post;
@@ -83,7 +84,7 @@ export class ApiActionHandler<T extends JSONAModel> {
                 endpoint: this.endpoint,
                 operation,
                 method,
-                requestConfig: { data: rawData },
+                requestConfig: { data: rawData, headers },
             });
         }
 
@@ -108,6 +109,7 @@ export class ApiActionHandler<T extends JSONAModel> {
 
     public getAll(
         jsonApiQuery?: JsonApiQuery,
+        headers?: { [key: string]: string },
         additionalUrlParam?: string,
     ): ApiThunkAction {
         const method = RequestMethod.Get;
@@ -126,7 +128,8 @@ export class ApiActionHandler<T extends JSONAModel> {
             endpoint,
             operation,
             method: RequestMethod.Get,
-            requestConfig: jsonApiQuery && jsonApiQuery.getRequestConfig(),
+            requestConfig:
+                jsonApiQuery && jsonApiQuery.getRequestConfig(headers),
         };
 
         return ApiActionCreator.createAction(config);
@@ -135,6 +138,7 @@ export class ApiActionHandler<T extends JSONAModel> {
     public get(
         id: string,
         includes: string[] = [],
+        headers?: { [key: string]: string },
         additionalUrlParam?: string,
     ): ApiThunkAction {
         const jsonApiQuery = new JsonApiQuery({ includes });
@@ -150,7 +154,7 @@ export class ApiActionHandler<T extends JSONAModel> {
             id: this.getTransformedId(id),
             operation,
             method,
-            requestConfig: jsonApiQuery.getRequestConfig(),
+            requestConfig: jsonApiQuery.getRequestConfig(headers),
             additionalUrlParam,
         });
     }
@@ -158,6 +162,7 @@ export class ApiActionHandler<T extends JSONAModel> {
     public update(
         id: string,
         serializeModelParam: SerializeJsonApiModelParam,
+        headers?: { [key: string]: string },
     ): ApiThunkAction {
         const serializedData = this.jsonaDataFormatter.serializeWithInlineRelationships(
             serializeModelParam,
@@ -176,11 +181,15 @@ export class ApiActionHandler<T extends JSONAModel> {
             method,
             requestConfig: {
                 data: serializedData,
+                headers,
             },
         });
     }
 
-    public delete(id: string): ApiThunkAction {
+    public delete(
+        id: string,
+        headers?: { [key: string]: string },
+    ): ApiThunkAction {
         const method = RequestMethod.Delete;
         const operation = new ApiOperation({
             resourceType: this.resourceType,
@@ -193,6 +202,7 @@ export class ApiActionHandler<T extends JSONAModel> {
             id: this.getTransformedId(id),
             operation,
             method,
+            requestConfig: { headers },
         });
     }
 }

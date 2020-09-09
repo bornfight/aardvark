@@ -18,6 +18,7 @@ export const useGetAllControlled = <
 >(
     apiActionHandler: T,
     jsonApiQuery?: JsonApiQuery,
+    headers?: { [key: string]: string },
     additionalUrlParam?: string,
 ): {
     operation: Operation;
@@ -30,10 +31,11 @@ export const useGetAllControlled = <
     const dispatch: Dispatch = useDispatch();
     const getAll = useCallback(() => {
         return new Promise<JsonApiObject[]>((resolve, reject) => {
-            let action = apiActionHandler.getAll(jsonApiQuery);
+            let action = apiActionHandler.getAll(jsonApiQuery, headers);
             if (additionalUrlParam) {
                 action = apiActionHandler.getAll(
                     jsonApiQuery,
+                    headers,
                     additionalUrlParam,
                 );
             }
@@ -45,7 +47,7 @@ export const useGetAllControlled = <
                     reject(e);
                 });
         });
-    }, [apiActionHandler, dispatch, jsonApiQuery, additionalUrlParam]);
+    }, [apiActionHandler, dispatch, jsonApiQuery, additionalUrlParam, headers]);
 
     const operation = apiActionHandler.operationUtility.getOperationGetAll(
         jsonApiQuery,

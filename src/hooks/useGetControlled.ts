@@ -17,6 +17,7 @@ export const useGetControlled = <
     apiActionHandler: T,
     id: string,
     includes?: string[],
+    headers?: { [key: string]: string },
     additionalUrlParam?: string,
 ): {
     operation: Operation;
@@ -27,9 +28,14 @@ export const useGetControlled = <
     const dispatch: Dispatch = useDispatch();
     const getSingle = useCallback(() => {
         return new Promise<JsonApiObject>((resolve, reject) => {
-            let action = apiActionHandler.get(id, includes);
+            let action = apiActionHandler.get(id, includes, headers);
             if (additionalUrlParam) {
-                action = apiActionHandler.get(id, includes, additionalUrlParam);
+                action = apiActionHandler.get(
+                    id,
+                    includes,
+                    headers,
+                    additionalUrlParam,
+                );
             }
 
             dispatch(action)

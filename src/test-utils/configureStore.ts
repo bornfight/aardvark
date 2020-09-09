@@ -4,6 +4,7 @@ import { RootState } from "../interfaces/RootState";
 import { ApiSaga } from "../sagas/ApiSaga";
 import { createMiddleware } from "./createMiddleware";
 import { rootReducer } from "./rootReducer";
+import { SagaMiddleware } from "redux-saga";
 
 interface ReduxDevToolsConfig {
     name?: string;
@@ -11,13 +12,16 @@ interface ReduxDevToolsConfig {
 
 export const configureStore = ({
     initialState,
+    onSagaEnd,
 }: {
     initialState?: RecursivePartial<RootState>;
     baseUrl?: string;
     reduxDevToolsConfig?: ReduxDevToolsConfig;
+    onSagaEnd?: () => void;
 } = {}): {
     apiSaga: ApiSaga;
     store: Store;
+    sagaMiddleware: SagaMiddleware;
 } => {
     const {
         apiSaga,
@@ -33,10 +37,18 @@ export const configureStore = ({
         compose(storeEnhancer),
     );
 
-    sagaMiddleware.run(rootSaga);
+    sagaMiddleware
+        .run(rootSaga)
+        .toPromise()
+        .then(() => {
+            if (onSagaEnd) {
+                onSagaEnd();
+            }
+        });
 
     return {
         apiSaga,
         store,
+        sagaMiddleware,
     };
 };
