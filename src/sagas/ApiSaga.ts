@@ -3,13 +3,13 @@ import { AxiosResponse } from "axios";
 import { Action } from "redux";
 import { all, fork, put, takeEvery } from "redux-saga/effects";
 import { Saga } from "../interfaces/Saga";
+import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
+import { ApiStatusTypePrefix } from "../services/ApiActionCreator/enums/ApiStatusTypePrefix";
+import { ApiReduxAction } from "../services/ApiActionCreator/interfaces/ApiReduxAction";
 import {
     ApiService,
     ApiServiceConstructorOptions,
 } from "../services/ApiService/apiService";
-import { ApiStatusTypePrefix } from "../services/ApiActionCreator/enums/ApiStatusTypePrefix";
-import { ApiReduxAction } from "../services/ApiActionCreator/interfaces/ApiReduxAction";
-import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 
 export class ApiSaga implements Saga {
     public readonly apiService: ApiService;
