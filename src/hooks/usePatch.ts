@@ -11,6 +11,23 @@ import { Dispatch } from "../interfaces/Dispatch";
 import { JsonApiObject } from "json-api-normalizer";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
 
+const checkValidity = (
+    serializeModelParam: SerializeJsonApiModelPatchParam,
+) => {
+    if (
+        serializeModelParam?.model?.type === undefined ||
+        serializeModelParam?.model?.id === undefined
+    ) {
+        console.warn(
+            "Wrong JSONA model, both id and type must be present in the model.",
+        );
+    }
+
+    if (serializeModelParam?.includeNames === undefined) {
+        console.warn("includeNames array is missing.");
+    }
+};
+
 export const usePatch = <
     T extends ApiActionHandler<JSONAModel>,
     F extends JSONAModel = ExtractJSONAModel<T>
@@ -64,23 +81,6 @@ export const usePatch = <
             id,
         ) as unknown) as F;
     });
-
-    const checkValidity = (
-        serializeModelParam: SerializeJsonApiModelPatchParam<F>,
-    ) => {
-        if (
-            serializeModelParam?.model?.type === undefined ||
-            serializeModelParam?.model?.id === undefined
-        ) {
-            console.warn(
-                "Wrong JSONA model, both id and type must be present in the model.",
-            );
-        }
-
-        if (serializeModelParam?.includeNames === undefined) {
-            console.warn("includeNames array is missing.");
-        }
-    };
 
     return {
         operation,

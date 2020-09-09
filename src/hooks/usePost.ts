@@ -12,6 +12,16 @@ import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { StateHelper } from "../services/StateHelper/StateHelper";
 import { ExtractJSONAModel } from "../types/UtilityTypes";
 
+const checkValidity = (serializeModelParam: ActionPostData) => {
+    if (
+        (serializeModelParam as SerializeJsonApiModelPostParam)?.model &&
+        (serializeModelParam as SerializeJsonApiModelPostParam)?.model?.type ===
+            undefined
+    ) {
+        console.warn("Wrong JSONA model, type must be present in the model.");
+    }
+};
+
 export const usePost = <
     T extends ApiActionHandler<JSONAModel>,
     F = ExtractJSONAModel<T>
@@ -53,18 +63,6 @@ export const usePost = <
             id,
         ) as unknown) as F;
     });
-
-    const checkValidity = (serializeModelParam: ActionPostData) => {
-        if (
-            (serializeModelParam as SerializeJsonApiModelPostParam)?.model &&
-            (serializeModelParam as SerializeJsonApiModelPostParam)?.model
-                ?.type === undefined
-        ) {
-            console.warn(
-                "Wrong JSONA model, type must be present in the model.",
-            );
-        }
-    };
 
     return {
         operation,
