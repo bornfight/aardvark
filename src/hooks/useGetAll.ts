@@ -52,7 +52,12 @@ export const useGetAll = <
     });
 
     const meta = useSelector((state: RootState) => {
-        return apiSelectors.getOperationMeta(state, operation);
+        return apiSelectors.getOperationMeta(
+            state,
+            operation,
+            undefined,
+            RequestMethod.Get,
+        );
     });
 
     return {
