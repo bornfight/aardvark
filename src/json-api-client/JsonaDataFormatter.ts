@@ -5,12 +5,12 @@ import {
     TReduxObject,
 } from "jsona/lib/JsonaTypes";
 import { TJsonApiBody, TJsonApiRelationshipData } from "jsona/src/JsonaTypes";
-import { SerializedMergedData } from "./interfaces/SerializedMergedData";
-import { JsonApiRelationships } from "./interfaces/JsonApiRelationships";
 import { JsonApiData } from "..";
 import { Entities } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
 import { SerializeJsonApiModelParam } from "../interfaces/SerializeJsonApiModelParam";
+import { JsonApiRelationships } from "./interfaces/JsonApiRelationships";
+import { SerializedMergedData } from "./interfaces/SerializedMergedData";
 
 interface SingleIdOpts {
     reduxObject: Entities;
@@ -104,7 +104,7 @@ class JsonaDataFormatter {
         return newSerializedData;
     }
 
-    private checkIsAttributesObjectEmpty(data: TJsonApiData) {
+    private isAttributesObjectEmpty(data: TJsonApiData) {
         return (
             data?.attributes &&
             Object.keys(data.attributes).length === 0 &&
@@ -119,7 +119,7 @@ class JsonaDataFormatter {
         if (isArray) {
             return data;
         }
-        const isAttributesObjectEmpty = this.checkIsAttributesObjectEmpty(
+        const isAttributesObjectEmpty = this.isAttributesObjectEmpty(
             data.data as TJsonApiData,
         );
         if (isAttributesObjectEmpty) {
@@ -138,25 +138,23 @@ class JsonaDataFormatter {
                     (relationships[key]
                         ?.data as TJsonApiRelationshipData[]).forEach(
                         (relationshipArrayObject) => {
-                            const isRelationshipAttributesEmpty = this.checkIsAttributesObjectEmpty(
-                                // the following key exists on the relationship object, repeating for all 4 ignores
-                                // @ts-ignore
-                                relationshipArrayObject.attributes,
+                            const isRelationshipAttributesEmpty = this.isAttributesObjectEmpty(
+                                (relationshipArrayObject as TJsonApiData)
+                                    .attributes as TJsonApiData,
                             );
                             if (isRelationshipAttributesEmpty) {
-                                // @ts-ignore
-                                relationshipArrayObject.attributes = undefined;
+                                (relationshipArrayObject as TJsonApiData).attributes = undefined;
                             }
                         },
                     );
                 }
-                const isRelationshipAttributesObjectEmpty = this.checkIsAttributesObjectEmpty(
-                    // @ts-ignore
-                    relationships[key]?.data?.attributes,
+                const isRelationshipAttributesObjectEmpty = this.isAttributesObjectEmpty(
+                    (relationships[key]?.data as TJsonApiData)
+                        ?.attributes as TJsonApiData,
                 );
                 if (isRelationshipAttributesObjectEmpty) {
-                    // @ts-ignore
-                    relationships[key].data.attributes = undefined;
+                    (relationships[key]
+                        .data as TJsonApiData).attributes = undefined;
                 }
             });
             (data.data as TJsonApiData).relationships = relationships;
@@ -192,7 +190,6 @@ class JsonaDataFormatter {
         this.removeClientGeneratedEntityFlag(entity);
     }
 
-    // tslint:disable-next-line:cognitive-complexity
     private getMergedIncludedDataWithRelationshipData(
         dataRelationships: JsonApiRelationships,
         included: JsonApiData[],
@@ -238,7 +235,7 @@ class JsonaDataFormatter {
                 relationship.data = filledEntity;
             }
 
-            const isAttributesObjectEmpty = this.checkIsAttributesObjectEmpty(
+            const isAttributesObjectEmpty = this.isAttributesObjectEmpty(
                 relationship?.data as TJsonApiData,
             );
             if (isAttributesObjectEmpty) {
