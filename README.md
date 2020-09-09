@@ -75,7 +75,7 @@ const {
 getCars();
 ```
 
-## POST hooks
+## Other hooks
 ### usePost
 Constructs a function used for POST requests. Returns create function, loading, record and operation name.
 
@@ -182,7 +182,7 @@ const {
 deleteCar("3");
  ```
 
-### ActionHandler
+## ActionHandler
 ActionHandler is used to define type of a resource, its endpoint and a selector.
 It creates actions for redux repending on the hook
 They are easy to write with the provided class.
