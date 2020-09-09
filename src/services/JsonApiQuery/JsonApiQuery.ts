@@ -29,9 +29,12 @@ export class JsonApiQuery {
     }
 
     // tslint:disable-next-line:newspaper-order
-    public getRequestConfig(): AxiosRequestConfig {
+    public getRequestConfig(headers?: {
+        [key: string]: string;
+    }): AxiosRequestConfig {
         return {
             params: this.urlSearchParams,
+            headers,
         };
     }
 

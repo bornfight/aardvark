@@ -1,19 +1,20 @@
-import { ApiActionHandler } from "..";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { StateHelper } from "../services/StateHelper/StateHelper";
-import { RootState } from "../interfaces/RootState";
-import { Operation } from "../interfaces/Operation";
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { ExtractJSONAModel } from "../types/UtilityTypes";
+import { ApiActionHandler } from "..";
 import { Dispatch } from "../interfaces/Dispatch";
+import { JSONAModel } from "../interfaces/JSONAModel";
+import { Operation } from "../interfaces/Operation";
+import { RootState } from "../interfaces/RootState";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ExtractJSONAModel } from "../types/UtilityTypes";
 
 export const useDelete = <
     T extends ApiActionHandler<JSONAModel>,
     F = ExtractJSONAModel<T>
 >(
     apiActionHandler: T,
+    headers?: { [key: string]: string },
 ): {
     operation: Operation;
     record: F | null;
@@ -27,7 +28,7 @@ export const useDelete = <
         (deleteId: string) => {
             setId(deleteId);
             return new Promise<{}>((resolve, reject) => {
-                dispatch(apiActionHandler.delete(deleteId))
+                dispatch(apiActionHandler.delete(deleteId, headers))
                     .then((response) => {
                         resolve(response);
                     })
