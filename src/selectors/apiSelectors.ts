@@ -76,7 +76,6 @@ export const getTotalCount = createCachedSelector(
     getOperationMeta,
     (operationMeta): number | undefined => {
         let total: unknown;
-        const prevCount = usePrevious(total);
         if (operationMeta && operationMeta.dataMeta) {
             total =
                 operationMeta.dataMeta.total ||
@@ -85,11 +84,11 @@ export const getTotalCount = createCachedSelector(
         }
 
         if (typeof total === "string" && total.length > 0) {
-            return Number(prevCount);
+            return Number(usePrevious(total));
         }
 
         if (typeof total === "number") {
-            return prevCount as number;
+            return usePrevious(total) as number;
         }
 
         return undefined;
