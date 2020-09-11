@@ -3,7 +3,8 @@ import { TJsonaModel } from "jsona/lib/JsonaTypes";
 import { RELATIONSHIP_NAMES_PROP } from "jsona/lib/simplePropertyMappers";
 
 export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
-    getAttributes(model: TJsonaModel) {
+    // @ts-ignore
+    getAttributes(model: TJsonaModel): TJsonaModel | undefined {
         let exceptProps = ["id", "type", RELATIONSHIP_NAMES_PROP];
 
         if (Array.isArray(model[RELATIONSHIP_NAMES_PROP])) {
@@ -16,15 +17,20 @@ export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
             );
         }
 
-        /**
-         * todo: return undefined instead of empty object if no attributes are present
-         */
         const attributes = {};
         Object.keys(model).forEach((attrName) => {
             if (exceptProps.indexOf(attrName) === -1) {
                 (attributes as any)[attrName] = model[attrName];
             }
         });
+
+        // is empty object
+        if (
+            Object.keys(attributes).length === 0 &&
+            attributes.constructor === Object
+        ) {
+            return;
+        }
 
         return attributes;
     }

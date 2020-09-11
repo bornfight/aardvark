@@ -1,10 +1,6 @@
 import { Jsona } from "jsona";
-import {
-    TJsonApiData,
-    TJsonApiRelationships,
-    TReduxObject,
-} from "jsona/lib/JsonaTypes";
-import { TJsonApiBody, TJsonApiRelationshipData } from "jsona/src/JsonaTypes";
+import { TJsonApiData, TReduxObject } from "jsona/lib/JsonaTypes";
+import { TJsonApiBody } from "jsona/src/JsonaTypes";
 import { JsonApiData } from "..";
 import { Entities } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
@@ -28,6 +24,7 @@ interface MultipleIdOpts {
 }
 
 const jsonaDenormalizer = new Jsona({
+    // @ts-ignore
     modelPropertiesMapper: new CustomModelPropertiesMapper(),
 });
 
@@ -91,7 +88,7 @@ class JsonaDataFormatter {
             throw new Error("No relationships found on data model");
         }
 
-        let newSerializedData: SerializedMergedData = {
+        const newSerializedData: SerializedMergedData = {
             data,
         };
 
@@ -100,70 +97,7 @@ class JsonaDataFormatter {
             included,
         );
 
-        newSerializedData = this.removeEmptyAttributesObjects(
-            newSerializedData,
-        );
-
         return newSerializedData;
-    }
-
-    private isAttributesObjectEmpty(data: TJsonApiData) {
-        return (
-            data?.attributes &&
-            Object.keys(data.attributes).length === 0 &&
-            data.attributes.constructor === Object
-        );
-    }
-
-    private removeEmptyAttributesObjects(
-        data: SerializedMergedData,
-    ): SerializedMergedData {
-        const isArray = Array.isArray(data.data);
-        if (isArray) {
-            return data;
-        }
-        const isAttributesObjectEmpty = this.isAttributesObjectEmpty(
-            data.data as TJsonApiData,
-        );
-        if (isAttributesObjectEmpty) {
-            (data.data as TJsonApiData).attributes = undefined;
-        }
-
-        // removes attributes = {} for relationships (singular and arrays)
-        if ((data.data as TJsonApiData)?.relationships !== undefined) {
-            const relationships = (data.data as TJsonApiData)
-                .relationships as TJsonApiRelationships;
-            Object.keys(relationships).forEach((key) => {
-                const isArrayRelationship = Array.isArray(
-                    relationships[key]?.data,
-                );
-                if (isArrayRelationship) {
-                    (relationships[key]
-                        ?.data as TJsonApiRelationshipData[]).forEach(
-                        (relationshipArrayObject) => {
-                            const isRelationshipAttributesEmpty = this.isAttributesObjectEmpty(
-                                (relationshipArrayObject as TJsonApiData)
-                                    .attributes as TJsonApiData,
-                            );
-                            if (isRelationshipAttributesEmpty) {
-                                (relationshipArrayObject as TJsonApiData).attributes = undefined;
-                            }
-                        },
-                    );
-                }
-                const isRelationshipAttributesObjectEmpty = this.isAttributesObjectEmpty(
-                    (relationships[key]?.data as TJsonApiData)
-                        ?.attributes as TJsonApiData,
-                );
-                if (isRelationshipAttributesObjectEmpty) {
-                    (relationships[key]
-                        .data as TJsonApiData).attributes = undefined;
-                }
-            });
-            (data.data as TJsonApiData).relationships = relationships;
-        }
-
-        return data;
     }
 
     private removeClientGeneratedEntityFlag(entity: JsonApiData) {
@@ -201,50 +135,45 @@ class JsonaDataFormatter {
             JSON.stringify(dataRelationships),
         );
 
-        Object.entries(relationshipsClone).forEach(([, relationship]) => {
-            if (Array.isArray(relationship.data)) {
-                relationship.data = relationship.data.map((entity) => {
-                    if (entity.id === undefined) {
-                        return entity;
-                    }
+        Object.entries(relationshipsClone).forEach(
+            ([_relationshipName, relationship]) => {
+                if (Array.isArray(relationship.data)) {
+                    relationship.data = relationship.data.map((entity) => {
+                        if (entity.id === undefined) {
+                            return entity;
+                        }
 
-                    const filledEntityInArr = this.getEntityFromIncludedById(
-                        included,
-                        entity.id,
-                        entity.type as ResourceType,
-                    );
+                        const filledEntityInArr = this.getEntityFromIncludedById(
+                            included,
+                            entity.id,
+                            entity.type as ResourceType,
+                        );
 
-                    if (!filledEntityInArr) {
-                        this.removeClientGeneratedEntityFlag(entity);
-                        return entity;
-                    }
+                        if (!filledEntityInArr) {
+                            this.removeClientGeneratedEntityFlag(entity);
+                            return entity;
+                        }
 
-                    return filledEntityInArr;
-                });
-                return;
-            }
+                        return filledEntityInArr;
+                    });
+                    return;
+                }
 
-            if (relationship.data.id === undefined) {
-                return;
-            }
+                if (relationship.data.id === undefined) {
+                    return;
+                }
 
-            const filledEntity = this.getEntityFromIncludedById(
-                included,
-                relationship.data.id,
-                relationship.data.type as ResourceType,
-            );
+                const filledEntity = this.getEntityFromIncludedById(
+                    included,
+                    relationship.data.id,
+                    relationship.data.type as ResourceType,
+                );
 
-            if (filledEntity) {
-                relationship.data = filledEntity;
-            }
-
-            const isAttributesObjectEmpty = this.isAttributesObjectEmpty(
-                relationship?.data as TJsonApiData,
-            );
-            if (isAttributesObjectEmpty) {
-                relationship.data.attributes = undefined;
-            }
-        });
+                if (filledEntity) {
+                    relationship.data = filledEntity;
+                }
+            },
+        );
 
         return relationshipsClone;
     }
