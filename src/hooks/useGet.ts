@@ -24,7 +24,7 @@ export const useGet = <
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(apiActionHandler.get(id, includes, headers));
-    }, [apiActionHandler, id, includes, dispatch]);
+    }, [apiActionHandler, id, includes, dispatch, headers]);
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
     const loading = useSelector((state: RootState) => {
