@@ -3,7 +3,6 @@ import { TJsonaModel } from "jsona/lib/JsonaTypes";
 import { RELATIONSHIP_NAMES_PROP } from "jsona/lib/simplePropertyMappers";
 
 export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
-    // @ts-ignore
     getAttributes(model: TJsonaModel): TJsonaModel | undefined {
         let exceptProps = ["id", "type", RELATIONSHIP_NAMES_PROP];
 
@@ -24,7 +23,6 @@ export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
             }
         });
 
-        // is empty object
         if (
             Object.keys(attributes).length === 0 &&
             attributes.constructor === Object

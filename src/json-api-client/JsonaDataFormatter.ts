@@ -24,7 +24,6 @@ interface MultipleIdOpts {
 }
 
 const jsonaDenormalizer = new Jsona({
-    // @ts-ignore
     modelPropertiesMapper: new CustomModelPropertiesMapper(),
 });
 
