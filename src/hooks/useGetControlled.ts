@@ -35,7 +35,7 @@ export const useGetControlled = <
                     reject(e);
                 });
         });
-    }, [apiActionHandler, dispatch, id, includes]);
+    }, [apiActionHandler, dispatch, id, includes, headers]);
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
     const loading = useSelector((state: RootState) => {
