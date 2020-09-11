@@ -1,9 +1,10 @@
 import { ModelPropertiesMapper } from "jsona";
 import { TJsonaModel } from "jsona/lib/JsonaTypes";
 import { RELATIONSHIP_NAMES_PROP } from "jsona/lib/simplePropertyMappers";
+import { TAnyKeyValueObject } from "jsona/src/JsonaTypes";
 
 export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
-    getAttributes(model: TJsonaModel): TJsonaModel | undefined {
+    getAttributes(model: TJsonaModel): TAnyKeyValueObject {
         let exceptProps = ["id", "type", RELATIONSHIP_NAMES_PROP];
 
         if (Array.isArray(model[RELATIONSHIP_NAMES_PROP])) {
@@ -27,7 +28,10 @@ export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
             Object.keys(attributes).length === 0 &&
             attributes.constructor === Object
         ) {
-            return;
+            /**
+             * casting to any because we need to return undefined to prevent adding empty attributes object
+             */
+            return undefined as any;
         }
 
         return attributes;
