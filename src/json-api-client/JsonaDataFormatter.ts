@@ -11,6 +11,7 @@ import { ResourceType } from "../interfaces/ResourceType";
 import { SerializeJsonApiModelParamType } from "../interfaces/SerializeJsonApiModelParam";
 import { JsonApiRelationships } from "./interfaces/JsonApiRelationships";
 import { SerializedMergedData } from "./interfaces/SerializedMergedData";
+import { CustomModelPropertiesMapper } from "./CustomModelPropertiesMapper";
 
 interface SingleIdOpts {
     reduxObject: Entities;
@@ -26,7 +27,9 @@ interface MultipleIdOpts {
     returnBuilderInRelations?: boolean;
 }
 
-const jsonaDenormalizer = new Jsona();
+const jsonaDenormalizer = new Jsona({
+    modelPropertiesMapper: new CustomModelPropertiesMapper(),
+});
 
 function denormalizeReduxObject<T>(options: SingleIdOpts): null | T;
 function denormalizeReduxObject<T>(options: MultipleIdOpts): null | T[];
