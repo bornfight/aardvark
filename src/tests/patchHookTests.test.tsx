@@ -24,7 +24,7 @@ describe("usePatch", () => {
         <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
     );
 
-    it("should patch data " + "", async () => {
+    it("should patch data", async () => {
         const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
 
         mock.onPatch("/cars/9").reply(200, {

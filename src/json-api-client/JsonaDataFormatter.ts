@@ -8,7 +8,7 @@ import { TJsonApiBody, TJsonApiRelationshipData } from "jsona/src/JsonaTypes";
 import { JsonApiData } from "..";
 import { Entities } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
-import { SerializeJsonApiModelParam } from "../interfaces/SerializeJsonApiModelParam";
+import { SerializeJsonApiModelParamType } from "../interfaces/SerializeJsonApiModelParam";
 import { JsonApiRelationships } from "./interfaces/JsonApiRelationships";
 import { SerializedMergedData } from "./interfaces/SerializedMergedData";
 
@@ -55,7 +55,7 @@ class JsonaDataFormatter {
     public serializeWithInlineRelationships({
         model,
         includeNames,
-    }: SerializeJsonApiModelParam) {
+    }: SerializeJsonApiModelParamType) {
         const serializedData = jsonaDenormalizer.serialize({
             stuff: model,
             includeNames,
