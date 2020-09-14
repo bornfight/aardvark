@@ -1,9 +1,10 @@
 /* tslint:disable:max-classes-per-file */
 
-import { createMockStore } from "../../test-utils/createMockStore";
-import { ResourceType } from "../../interfaces/ResourceType";
 import { FooActionHandler } from "../../__fixtures__/FooActionHandler";
+import { SlashActionHandler } from "../../__fixtures__/SlashActionHandler";
+import { ResourceType } from "../../interfaces/ResourceType";
 import { JsonApiQuery } from "../../services/JsonApiQuery/JsonApiQuery";
+import { createMockStore } from "../../test-utils/createMockStore";
 import { FooJSONAModel } from "../__fixtures__/FooJSONAModel";
 
 const store = createMockStore({
@@ -266,6 +267,30 @@ describe("ApiActionHandler", () => {
                     },
                 },
             });
+        });
+    });
+
+    describe("#preserveRequestTrailingSlash", () => {
+        const slashActionHandler = new SlashActionHandler();
+        it("should create correct request endpoint with trailing slash", () => {
+            const action = slashActionHandler.getAll();
+
+            store.dispatch(action);
+            const storeActions = store.getActions();
+            const calledAction = storeActions[0];
+            const { reject, resolve, requestConfig, ...rest } = calledAction;
+
+            expect(rest).toEqual({
+                type: "@@api/INITIAL_GET_SLASH",
+                apiActionType: "jsonApiRequest",
+                operation: "GET_SLASH",
+                status: "begin",
+                endpoint: "/slash/",
+                method: "get",
+            });
+
+            expect(reject).toEqual(expect.any(Function));
+            expect(resolve).toEqual(expect.any(Function));
         });
     });
 });
