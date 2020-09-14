@@ -185,7 +185,7 @@ describe("jsonaDataFormatter", () => {
         };
         const expectedSerializedRequestData = {
             data: {
-                id: "1",
+                id: undefined,
                 type: "car",
                 attributes: undefined,
             },

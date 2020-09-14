@@ -24,14 +24,11 @@ export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
             }
         });
 
-        const is__clientGeneratedEntityOnlyAttribute =
-            attributes["__clientGeneratedEntity"] !== undefined &&
-            Object.keys(attributes).length === 1;
         const isEmptyObject =
             Object.keys(attributes).length === 0 &&
             attributes.constructor === Object;
 
-        if (is__clientGeneratedEntityOnlyAttribute || isEmptyObject) {
+        if (isEmptyObject) {
             /**
              * casting to any because we need to return undefined to prevent adding empty attributes object
              */
