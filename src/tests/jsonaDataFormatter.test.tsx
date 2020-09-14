@@ -176,4 +176,24 @@ describe("jsonaDataFormatter", () => {
 
         expect(serializedRequestData).toEqual(expectedSerializedRequestData);
     });
+
+    it("should properly return attributes as undefined if __clientGeneratedEntity is the only attribute", async () => {
+        const requestData = {
+            id: "1",
+            type: "car",
+            __clientGeneratedEntity: true,
+        };
+        const expectedSerializedRequestData = {
+            data: {
+                id: undefined,
+                type: "car",
+                attributes: undefined,
+            },
+        };
+        const serializedRequestData = jsonaDataFormatter.serializeWithInlineRelationships(
+            { model: requestData, includeNames: [] },
+        );
+
+        expect(serializedRequestData).toEqual(expectedSerializedRequestData);
+    });
 });

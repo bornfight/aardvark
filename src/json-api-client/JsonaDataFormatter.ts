@@ -107,6 +107,11 @@ class JsonaDataFormatter {
             delete entity.attributes.__clientGeneratedEntity;
         }
 
+        // set attributes object to undefined if empty
+        if (entity.attributes && Object.keys(entity.attributes).length === 0) {
+            entity.attributes = undefined;
+        }
+
         return entity;
     }
 

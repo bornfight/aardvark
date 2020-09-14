@@ -17,17 +17,18 @@ export class CustomModelPropertiesMapper extends ModelPropertiesMapper {
             );
         }
 
-        const attributes = {};
+        const attributes: { [key: string]: any } = {};
         Object.keys(model).forEach((attrName) => {
             if (exceptProps.indexOf(attrName) === -1) {
                 (attributes as any)[attrName] = model[attrName];
             }
         });
 
-        if (
+        const isEmptyObject =
             Object.keys(attributes).length === 0 &&
-            attributes.constructor === Object
-        ) {
+            attributes.constructor === Object;
+
+        if (isEmptyObject) {
             /**
              * casting to any because we need to return undefined to prevent adding empty attributes object
              */
