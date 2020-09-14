@@ -27,7 +27,7 @@ export class ApiActionHandler<T extends JSONAModel> {
         private endpoint: Endpoint,
         public readonly apiSelector: BaseApiSelector<T>,
         private transformId?: (id: string) => string,
-        private preserveRequestTrailingSlash?: false,
+        private preserveRequestTrailingSlash?: boolean,
     ) {
         this.operationUtility = new ApiOperationUtility(resourceType);
     }
