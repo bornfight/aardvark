@@ -52,7 +52,7 @@
         "type": "git"
     },
     "author": "Bornfight",
-    "private": true,
+    "private": false,
     "module": "dist/aardvark.esm.js",
     "devDependencies": {
         "@testing-library/react-hooks": "^3.4.1",
