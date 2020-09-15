@@ -24,7 +24,7 @@ describe("useDelete", () => {
         <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
     );
 
-    it("should delete data " + "", async () => {
+    it("should delete data", async () => {
         const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
 
         // returned data is null or undefined on delete actions

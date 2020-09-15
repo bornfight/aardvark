@@ -70,7 +70,7 @@ export const usePatch = <
                     });
             });
         },
-        [apiActionHandler, dispatch],
+        [apiActionHandler, dispatch, headers],
     );
 
     const operation =

@@ -37,7 +37,7 @@ export const useDelete = <
                     });
             });
         },
-        [apiActionHandler, dispatch],
+        [apiActionHandler, dispatch, headers],
     );
 
     const operation =
