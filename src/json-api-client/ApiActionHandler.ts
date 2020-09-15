@@ -1,22 +1,22 @@
-import { JSONAModel } from "../interfaces/JSONAModel";
-import { JsonaDataFormatter } from "./JsonaDataFormatter";
-import { ApiOperationUtility } from "./utilities/ApiOperationUtility";
-import { ResourceType } from "../interfaces/ResourceType";
 import { Endpoint } from "../interfaces/Endpoint";
-import { BaseApiSelector } from "../selectors/base/BaseApiSelector";
-import { RootState } from "../interfaces/RootState";
-import { RequestMethod } from "../selectors/enums/RequestMethod";
+import { JSONAModel } from "../interfaces/JSONAModel";
 import { Operation } from "../interfaces/Operation";
-import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ResourceType } from "../interfaces/ResourceType";
+import { RootState } from "../interfaces/RootState";
 import {
     SerializeJsonApiModelParam,
     SerializeJsonApiModelPostParam,
 } from "../interfaces/SerializeJsonApiModelParam";
-import { ApiThunkAction } from "./interfaces/ApiThunkAction";
-import { ApiOperation } from "./ApiOperation/ApiOperation";
+import { BaseApiSelector } from "../selectors/base/BaseApiSelector";
+import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { ApiActionCreator } from "../services/ApiActionCreator/ApiActionCreator";
 import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
+import { StateHelper } from "../services/StateHelper/StateHelper";
+import { ApiOperation } from "./ApiOperation/ApiOperation";
 import { ActionPostData, PostRawData } from "./interfaces/ActionPostData";
+import { ApiThunkAction } from "./interfaces/ApiThunkAction";
+import { JsonaDataFormatter } from "./JsonaDataFormatter";
+import { ApiOperationUtility } from "./utilities/ApiOperationUtility";
 
 export class ApiActionHandler<T extends JSONAModel> {
     public readonly jsonaDataFormatter = new JsonaDataFormatter();
@@ -27,6 +27,7 @@ export class ApiActionHandler<T extends JSONAModel> {
         private endpoint: Endpoint,
         public readonly apiSelector: BaseApiSelector<T>,
         private transformId?: (id: string) => string,
+        private preserveRequestTrailingSlash?: boolean,
     ) {
         this.operationUtility = new ApiOperationUtility(resourceType);
     }
@@ -67,7 +68,10 @@ export class ApiActionHandler<T extends JSONAModel> {
         }).getValue();
     }
 
-    public create(data: ActionPostData): ApiThunkAction {
+    public create(
+        data: ActionPostData,
+        headers?: { [key: string]: string },
+    ): ApiThunkAction {
         const method = RequestMethod.Post;
         const operation = new ApiOperation({
             resourceType: this.resourceType,
@@ -80,7 +84,8 @@ export class ApiActionHandler<T extends JSONAModel> {
                 endpoint: this.endpoint,
                 operation,
                 method,
-                requestConfig: { data: rawData },
+                requestConfig: { data: rawData, headers },
+                preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
             });
         }
 
@@ -95,10 +100,14 @@ export class ApiActionHandler<T extends JSONAModel> {
             operation,
             method,
             requestConfig: { data: serializedData },
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 
-    public getAll(jsonApiQuery?: JsonApiQuery): ApiThunkAction {
+    public getAll(
+        jsonApiQuery?: JsonApiQuery,
+        headers?: { [key: string]: string },
+    ): ApiThunkAction {
         const method = RequestMethod.Get;
         const operation = new ApiOperation({
             resourceType: this.resourceType,
@@ -110,13 +119,19 @@ export class ApiActionHandler<T extends JSONAModel> {
             endpoint: this.endpoint,
             operation,
             method: RequestMethod.Get,
-            requestConfig: jsonApiQuery && jsonApiQuery.getRequestConfig(),
+            requestConfig:
+                jsonApiQuery && jsonApiQuery.getRequestConfig(headers),
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         };
 
         return ApiActionCreator.createAction(config);
     }
 
-    public get(id: string, includes: string[] = []): ApiThunkAction {
+    public get(
+        id: string,
+        includes: string[] = [],
+        headers?: { [key: string]: string },
+    ): ApiThunkAction {
         const jsonApiQuery = new JsonApiQuery({ includes });
         const method = RequestMethod.Get;
         const operation = new ApiOperation({
@@ -130,13 +145,15 @@ export class ApiActionHandler<T extends JSONAModel> {
             id: this.getTransformedId(id),
             operation,
             method,
-            requestConfig: jsonApiQuery.getRequestConfig(),
+            requestConfig: jsonApiQuery.getRequestConfig(headers),
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 
     public update(
         id: string,
         serializeModelParam: SerializeJsonApiModelParam,
+        headers?: { [key: string]: string },
     ): ApiThunkAction {
         const serializedData = this.jsonaDataFormatter.serializeWithInlineRelationships(
             serializeModelParam,
@@ -155,11 +172,16 @@ export class ApiActionHandler<T extends JSONAModel> {
             method,
             requestConfig: {
                 data: serializedData,
+                headers,
             },
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 
-    public delete(id: string): ApiThunkAction {
+    public delete(
+        id: string,
+        headers?: { [key: string]: string },
+    ): ApiThunkAction {
         const method = RequestMethod.Delete;
         const operation = new ApiOperation({
             resourceType: this.resourceType,
@@ -172,6 +194,8 @@ export class ApiActionHandler<T extends JSONAModel> {
             id: this.getTransformedId(id),
             operation,
             method,
+            requestConfig: { headers },
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 }

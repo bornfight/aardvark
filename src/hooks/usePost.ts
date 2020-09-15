@@ -16,6 +16,7 @@ export const usePost = <
     F = ExtractJSONAModel<T>
 >(
     apiActionHandler: T,
+    headers?: { [key: string]: string },
 ): {
     operation: Operation;
     record: F | null;
@@ -28,7 +29,7 @@ export const usePost = <
     const create = useCallback(
         (data: ActionPostData) => {
             return new Promise<JsonApiObject>((resolve, reject) => {
-                dispatch(apiActionHandler.create(data))
+                dispatch(apiActionHandler.create(data, headers))
                     .then((response) => {
                         setId((response?.data as JsonApiObject)?.id || "");
                         // fetch newly created, triggers store update
@@ -44,7 +45,7 @@ export const usePost = <
                     });
             });
         },
-        [apiActionHandler, dispatch],
+        [apiActionHandler, dispatch, headers],
     );
     const operation = apiActionHandler.operationUtility.getOperationPost();
     const loading = useSelector((state: RootState) => {
