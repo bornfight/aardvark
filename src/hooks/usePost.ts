@@ -39,7 +39,7 @@ export const usePost = <
                     });
             });
         },
-        [apiActionHandler, dispatch],
+        [apiActionHandler, dispatch, headers],
     );
     const operation = apiActionHandler.operationUtility.getOperationPost();
     const loading = useSelector((state: RootState) => {
