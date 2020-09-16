@@ -12,6 +12,7 @@ export interface CreateApiActionConfigParam {
     method?: RequestMethod;
     requestConfig?: AxiosRequestConfig;
     apiActionType?: ApiActionType;
+    preserveRequestTrailingSlash?: boolean;
 
     resolve?: (responseData: AxiosResponse) => void;
     reject?: (error: AxiosError) => void;
