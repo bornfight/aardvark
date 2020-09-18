@@ -1,6 +1,8 @@
 # Aardvark
 **Data consumption React hooks for JSON:API specification**
 
+[![codecov](https://codecov.io/gh/bornfight/aardvark/branch/master/graph/badge.svg)](https://codecov.io/gh/bornfight/aardvark)
+
 TypeScript friendly
 
 ## GET hooks 
