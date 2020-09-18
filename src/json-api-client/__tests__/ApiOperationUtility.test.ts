@@ -28,7 +28,7 @@ describe("ApiOperationUtility", () => {
             });
             const actual = fooOperationUtility.getOperationGetAll(query);
             expect(actual).toBe(
-                "GET_FOO_INCLUDE=BARS,ABCS&FILTER[TESTCRITERIA]=AMAZING&SORT=BARS&PAGENUMBER=100&PAGESIZE=30&ONLYFREE=TRUE",
+                "GET_FOO_INCLUDE=BARS,ABCS&FILTER[TESTCRITERIA]=AMAZING&SORT=BARS&PAGE[NUMBER]=100&PAGE[SIZE]=30&ONLYFREE=TRUE",
             );
         });
     });
