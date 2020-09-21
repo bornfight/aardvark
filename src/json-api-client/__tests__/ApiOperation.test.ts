@@ -68,6 +68,38 @@ describe("ApiOperation", () => {
         });
 
         describe("with JsonApiQuery", () => {
+            it("should allow custom page size key name", () => {
+                const actual = new ApiOperation({
+                    resourceType: "foo" as ResourceType,
+                    method: RequestMethod.Get,
+                    jsonApiQuery: new JsonApiQuery({
+                        paginationConfig: {
+                            pageSize: 10,
+                            pageNumber: 3,
+                        },
+                        pageSizeKeyName: "pageSize",
+                    }),
+                }).getValue();
+
+                expect(actual).toEqual("GET_FOO_PAGE[NUMBER]=3&PAGESIZE=10");
+            });
+
+            it("should allow custom page number key name", () => {
+                const actual = new ApiOperation({
+                    resourceType: "foo" as ResourceType,
+                    method: RequestMethod.Get,
+                    jsonApiQuery: new JsonApiQuery({
+                        paginationConfig: {
+                            pageSize: 10,
+                            pageNumber: 3,
+                        },
+                        pageNumberKeyName: "pageNumber",
+                    }),
+                }).getValue();
+
+                expect(actual).toEqual("GET_FOO_PAGENUMBER=3&PAGE[SIZE]=10");
+            });
+
             it("should create a correct GET operation with a whole pagination config", () => {
                 const actual = new ApiOperation({
                     resourceType: "foo" as ResourceType,
