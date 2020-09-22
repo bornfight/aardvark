@@ -79,19 +79,22 @@ export class JsonApiReducer {
         state: ApiDataState,
         action: FetchFromApiSuccessAction,
     ): ApiDataState {
-        if (action.method === RequestMethod.Delete) {
-            return { meta: {}, html: {}, entities: {} };
-        }
-
         if (action.apiActionType === ApiActionType.HtmlRequest) {
             return this.createSuccessStateForHTML(state, action);
+        }
+        if (action.method === RequestMethod.Delete) {
+            return {
+                meta: state.meta,
+                html: state.html,
+                entities: state.entities,
+            };
         }
 
         const entities = this.getEntitiesFromResponseData(
             action.responseData,
             action.method,
         );
-        const dataMeta = action.responseData.meta;
+        const dataMeta = action?.responseData?.meta;
 
         const meta: MetaData = {
             [action.operation]: {
