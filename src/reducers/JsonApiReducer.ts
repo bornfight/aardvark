@@ -82,20 +82,13 @@ export class JsonApiReducer {
         if (action.apiActionType === ApiActionType.HtmlRequest) {
             return this.createSuccessStateForHTML(state, action);
         }
-        if (action.method === RequestMethod.Delete) {
-            return {
-                meta: state.meta,
-                html: state.html,
-                entities: state.entities,
-            };
-        }
 
         const entities = this.getEntitiesFromResponseData(
             action.responseData,
             action.method,
         );
-        const dataMeta = action.responseData.meta;
 
+        const dataMeta = action?.responseData?.meta;
         const meta: MetaData = {
             [action.operation]: {
                 [action.method]: {
@@ -108,6 +101,18 @@ export class JsonApiReducer {
                 },
             },
         };
+        const newMeta = this.createNewMeta(state.meta, meta);
+        if (action.method === RequestMethod.Delete) {
+            const newEntities = this.getEntitiesWithoutDeletedItem(
+                state.entities,
+                action.endpoint,
+            );
+            return {
+                meta: newMeta,
+                html: state.html,
+                entities: newEntities,
+            };
+        }
 
         const normalizedJsonApiResponseData = normalize(
             action.responseData as JsonApiResponse,
@@ -125,7 +130,6 @@ export class JsonApiReducer {
             nextCollections,
         );
 
-        const newMeta = this.createNewMeta(state.meta, meta);
         const areEntitiesEqual = isEqual(mergedCollections, state.entities);
 
         // whole state should not be passed as entries must be handled by helper functions
@@ -137,6 +141,28 @@ export class JsonApiReducer {
                 entities: areEntitiesEqual ? state.entities : mergedCollections,
             },
         );
+    }
+
+    private getEntitiesWithoutDeletedItem(
+        entities: Entities,
+        endpoint: string,
+    ): Entities {
+        // endpoint is of the following format: "/cars/2"
+        const keyToDelete = endpoint.split("/")[1];
+        const idToDelete = endpoint.split("/")[2];
+
+        // Removes entity (object of objects, cars:{1:{...},2:{...}} element from original
+        const { [keyToDelete]: parentValue, ...noChild } = entities;
+
+        // Removes the request-deleted item from object of objects extracted above
+        // @ts-ignore
+        const { [idToDelete]: removedValue, ...childWithout } = parentValue;
+
+        // Merge back together
+        return {
+            ...noChild,
+            [keyToDelete]: childWithout,
+        };
     }
 
     private createNewMeta(oldMeta: MetaData, newMeta: MetaData) {
