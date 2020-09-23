@@ -9,6 +9,7 @@ import {
     Entities,
     Entity,
     MetaData,
+    Identifiers,
 } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
@@ -147,7 +148,7 @@ export class JsonApiReducer {
         entities: Entities,
         endpoint: string,
     ): Entities {
-// endpoint is of the following format: "/cars/2"
+        // endpoint is of the following format: "/cars/2"
         const resourceType = endpoint.split("/")[1];
         const recordId = endpoint.split("/")[2];
         const {
