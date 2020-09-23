@@ -147,21 +147,32 @@ export class JsonApiReducer {
         entities: Entities,
         endpoint: string,
     ): Entities {
-        // endpoint is of the following format: "/cars/2"
-        const keyToDelete = endpoint.split("/")[1];
-        const idToDelete = endpoint.split("/")[2];
+// endpoint is of the following format: "/cars/2"
+        const resourceType = endpoint.split("/")[1];
+        const recordId = endpoint.split("/")[2];
+        const {
+            [resourceType]: targetResource,
+            ...entitiesWithoutTargetResource
+        } = entities;
 
-        // Removes entity (object of objects, cars:{1:{...},2:{...}} element from original
-        const { [keyToDelete]: parentValue, ...noChild } = entities;
+        /**
+         * nothing to delete, returning initial state
+         */
+        if (targetResource && targetResource[recordId] === undefined) {
+            return entities;
+        }
 
         // Removes the request-deleted item from object of objects extracted above
-        // @ts-ignore
-        const { [idToDelete]: removedValue, ...childWithout } = parentValue;
+        const {
+            [recordId]: removedValue,
+            ...targetResourceWithoutDeletedKey
+            // casting to identifiers because of the check for undefined in the earlier conditional
+        } = targetResource as Identifiers;
 
         // Merge back together
         return {
-            ...noChild,
-            [keyToDelete]: childWithout,
+            ...entitiesWithoutTargetResource,
+            [resourceType]: targetResourceWithoutDeletedKey,
         };
     }
 
