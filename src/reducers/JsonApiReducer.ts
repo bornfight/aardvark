@@ -94,7 +94,7 @@ export class JsonApiReducer {
             action.responseData,
             action.method,
         );
-        const dataMeta = action?.responseData?.meta;
+        const dataMeta = action.responseData.meta;
 
         const meta: MetaData = {
             [action.operation]: {
