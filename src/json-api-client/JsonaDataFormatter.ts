@@ -1,13 +1,17 @@
 import { Jsona } from "jsona";
-import { TJsonApiData, TReduxObject } from "jsona/lib/JsonaTypes";
+import {
+    TAnyKeyValueObject,
+    TJsonApiData,
+    TReduxObject,
+} from "jsona/lib/JsonaTypes";
 import { TJsonApiBody } from "jsona/src/JsonaTypes";
 import { JsonApiData } from "..";
 import { Entities } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
 import { SerializeJsonApiModelParamType } from "../interfaces/SerializeJsonApiModelParam";
+import { CustomModelPropertiesMapper } from "./CustomModelPropertiesMapper";
 import { JsonApiRelationships } from "./interfaces/JsonApiRelationships";
 import { SerializedMergedData } from "./interfaces/SerializedMergedData";
-import { CustomModelPropertiesMapper } from "./CustomModelPropertiesMapper";
 
 interface SingleIdOpts {
     reduxObject: Entities;
@@ -111,8 +115,54 @@ class JsonaDataFormatter {
         if (entity.attributes && Object.keys(entity.attributes).length === 0) {
             entity.attributes = undefined;
         }
+        let relationshipsWithoutAttributes;
+        if (entity.relationships) {
+            const relationships = entity.relationships;
+            relationshipsWithoutAttributes = this.removeAttributesFromRelationships(
+                relationships,
+            );
+            entity.relationships = relationshipsWithoutAttributes;
+        }
 
         return entity;
+    }
+
+    private removeAttributesFromRelationships(
+        relationships: JsonApiRelationships,
+    ): JsonApiRelationships {
+        const relationshipsClone = relationships;
+        Object.entries(relationshipsClone).forEach(
+            ([_relationshipName, relationship]) => {
+                if (Array.isArray(relationship.data)) {
+                    return (relationship.data = relationship.data.map(
+                        (entity) => {
+                            if (
+                                entity.attributes &&
+                                Object.keys(entity.attributes).length === 0
+                            ) {
+                                return { ...entity, attributes: undefined };
+                            }
+                            return entity;
+                        },
+                    ));
+                }
+                if (
+                    (relationship.data as JsonApiData).attributes !==
+                        undefined &&
+                    Object.keys(
+                        (relationship.data as JsonApiData)
+                            .attributes as TAnyKeyValueObject,
+                    ).length === 0
+                ) {
+                    return {
+                        ...relationship,
+                        data: { ...relationship.data, attributes: undefined },
+                    };
+                }
+                return;
+            },
+        );
+        return relationshipsClone;
     }
 
     private removeIdFieldFromClientGeneratedEntity(entity: JsonApiData) {

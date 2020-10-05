@@ -189,11 +189,11 @@ describe("jsonaDataFormatter", () => {
                         {
                             id: "4",
                             type: "diploma",
-                            // document: {
-                            //     id: "6",
-                            //     type: "document",
-                            // },
-                            // relationshipNames: ["document"],
+                            document: {
+                                id: "6",
+                                type: "document",
+                            },
+                            relationshipNames: ["document"],
                         },
                     ],
                     relationshipNames: ["diploma"],
@@ -220,14 +220,14 @@ describe("jsonaDataFormatter", () => {
                                                 id: "4",
                                                 type: "diploma",
                                                 attributes: undefined,
-                                                // relationships: {
-                                                //     document: {
-                                                //         data: {
-                                                //             id: "6",
-                                                //             type: "document",
-                                                //         },
-                                                //     },
-                                                // },
+                                                relationships: {
+                                                    document: {
+                                                        data: {
+                                                            id: "6",
+                                                            type: "document",
+                                                        },
+                                                    },
+                                                },
                                             },
                                         ],
                                     },
