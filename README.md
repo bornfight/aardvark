@@ -94,7 +94,10 @@ hook parameters:
  - actionHandler
 
 create function parameters (pick one):
- - model object and includeNames 
+ - model object and includeNames: 
+     - model is connected to actionHandler's entity
+     - includeNames determine the recognition of model's relationships. It is used with dot notation for nested relationships. E.g. includeNames=["car.owner.document"]
+     
  or
  - rawData object
 

@@ -119,12 +119,11 @@ class JsonaDataFormatter {
         return entity;
     }
 
-    private removeAttributesFromRelationships(
+    private removeEmptyAttributesFromRelationships(
         entity: JsonApiData,
     ): JsonApiData {
-        const relationshipsClone = entity.relationships;
-        if (relationshipsClone) {
-            Object.entries(relationshipsClone).forEach(
+        if (entity.relationships) {
+            Object.entries(entity.relationships).forEach(
                 ([_relationshipName, relationship]) => {
                     if (Array.isArray(relationship.data)) {
                         relationship.data = relationship.data.map((entity) => {
@@ -150,10 +149,7 @@ class JsonaDataFormatter {
                 },
             );
         }
-        return {
-            ...entity,
-            relationships: relationshipsClone,
-        };
+        return entity;
     }
 
     private removeIdFieldFromClientGeneratedEntity(entity: JsonApiData) {
@@ -170,7 +166,7 @@ class JsonaDataFormatter {
     private stripRedundantData(entity: JsonApiData) {
         this.removeIdFieldFromClientGeneratedEntity(entity);
         this.removeClientGeneratedEntityFlag(entity);
-        this.removeAttributesFromRelationships(entity);
+        this.removeEmptyAttributesFromRelationships(entity);
     }
 
     private getMergedIncludedDataWithRelationshipData(
