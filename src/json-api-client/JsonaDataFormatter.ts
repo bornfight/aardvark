@@ -63,7 +63,7 @@ class JsonaDataFormatter {
             stuff: model,
             includeNames,
         });
-        this.stripClientGeneratedEntityData(serializedData.data as JsonApiData);
+        this.stripRedundantData(serializedData.data as JsonApiData);
         if (serializedData.included === undefined) {
             return serializedData;
         }
@@ -167,7 +167,7 @@ class JsonaDataFormatter {
         return entity;
     }
 
-    private stripClientGeneratedEntityData(entity: JsonApiData) {
+    private stripRedundantData(entity: JsonApiData) {
         this.removeIdFieldFromClientGeneratedEntity(entity);
         this.removeClientGeneratedEntityFlag(entity);
         this.removeAttributesFromRelationships(entity);
@@ -243,7 +243,7 @@ class JsonaDataFormatter {
             );
         }
 
-        this.stripClientGeneratedEntityData(element);
+        this.stripRedundantData(element);
 
         return element;
     }

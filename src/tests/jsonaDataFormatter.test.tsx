@@ -241,23 +241,10 @@ describe("jsonaDataFormatter", () => {
         const serializedRequestData = jsonaDataFormatter.serializeWithInlineRelationships(
             {
                 model: requestData,
-                includeNames: ["owner", "diploma", "document"],
+                includeNames: ["owner.diploma.document"],
             },
         );
 
-        console.log(serializedRequestData);
-        // @ts-ignore
-        console.log(serializedRequestData.data.relationships.owner.data);
-        console.log(
-            // @ts-ignore
-            serializedRequestData.data.relationships.owner.data[0]
-                .relationships,
-        );
-        console.log(
-            // @ts-ignore
-            serializedRequestData.data.relationships.owner.data[0].relationships
-                .diploma.data,
-        );
         expect(serializedRequestData).toEqual(expectedSerializedRequestData);
     });
 

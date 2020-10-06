@@ -5,6 +5,14 @@
 
 TypeScript friendly
 
+Install with the following command:
+
+```
+yarn add @bornfight/aardvark
+or
+npm install @bornfight/aardvark
+```
+
 ## GET hooks 
 ### useGet
 Immediately fetches data when called. It returns fetched record, loading state and the operation name.
