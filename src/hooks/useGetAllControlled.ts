@@ -1,7 +1,8 @@
 import { JsonApiObject } from "json-api-normalizer";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ApiActionHandler } from "..";
+import { OperationMeta } from "../interfaces/ApiDataState";
+import { ApiActionHandler, apiSelectors } from "..";
 import { Dispatch } from "../interfaces/Dispatch";
 import { JSONAModel } from "../interfaces/JSONAModel";
 import { Operation } from "../interfaces/Operation";
@@ -26,6 +27,7 @@ export const useGetAllControlled = <
     loading: boolean;
     count: number | undefined;
     getAll: () => Promise<JsonApiObject[]>;
+    meta?: OperationMeta;
 } => {
     const dispatch: Dispatch = useDispatch();
     const getAll = useCallback(() => {
@@ -60,6 +62,15 @@ export const useGetAllControlled = <
         return getTotalCount(state, operation);
     });
 
+    const meta = useSelector((state: RootState) => {
+        return apiSelectors.getOperationMeta(
+            state,
+            operation,
+            undefined,
+            RequestMethod.Get,
+        );
+    });
+
     return {
         operation,
         ids,
@@ -67,5 +78,6 @@ export const useGetAllControlled = <
         loading,
         count,
         getAll,
+        meta,
     };
 };
