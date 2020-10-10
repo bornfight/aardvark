@@ -11,6 +11,23 @@ import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { StateHelper } from "../services/StateHelper/StateHelper";
 import { ExtractJSONAModel } from "../types/UtilityTypes";
 
+const checkValidity = (
+    serializeModelParam: SerializeJsonApiModelPatchParam,
+) => {
+    if (
+        serializeModelParam?.model?.type === undefined ||
+        serializeModelParam?.model?.id === undefined
+    ) {
+        console.warn(
+            "Wrong JSONA model, both id and type must be present in the model.",
+        );
+    }
+
+    if (serializeModelParam?.includeNames === undefined) {
+        console.warn("includeNames array is missing.");
+    }
+};
+
 export const usePatch = <
     T extends ApiActionHandler<JSONAModel>,
     F extends JSONAModel = ExtractJSONAModel<T>
@@ -34,6 +51,8 @@ export const usePatch = <
             patchId: string,
             serializeModelParam: SerializeJsonApiModelPatchParam<F>,
         ) => {
+            checkValidity(serializeModelParam);
+
             setId(patchId);
             return new Promise<JsonApiObject>((resolve, reject) => {
                 dispatch(
