@@ -1,16 +1,16 @@
 import { AxiosError } from "axios";
-import { CreateApiActionConfigParam } from "./interfaces/CreateApiActionConfigParam";
-import { ApiActionType } from "./enums/ApiActionType";
-import { ApiReduxAction } from "./interfaces/ApiReduxAction";
-import { ApiOperation } from "../../json-api-client/ApiOperation/ApiOperation";
-import { ApiStatusTypePrefix } from "./enums/ApiStatusTypePrefix";
-import { ActionStatus } from "./enums/ActionStatus";
-import { RequestMethod } from "../../selectors/enums/RequestMethod";
-import { ApiResponse } from "./interfaces/ResponseData";
-import { FetchFromApiSuccessAction } from "./interfaces/FetchFromApiSuccessAction";
-import { FetchFromApiFailedAction } from "./interfaces/FetchFromApiFailedAction";
-import { Dispatch } from "../../interfaces/Dispatch";
 import { Endpoint } from "../../interfaces/Endpoint";
+import { Dispatch } from "../../interfaces/Dispatch";
+import { ApiOperation } from "../../json-api-client/ApiOperation/ApiOperation";
+import { RequestMethod } from "../../selectors/enums/RequestMethod";
+import { ActionStatus } from "./enums/ActionStatus";
+import { ApiActionType } from "./enums/ApiActionType";
+import { ApiStatusTypePrefix } from "./enums/ApiStatusTypePrefix";
+import { ApiReduxAction } from "./interfaces/ApiReduxAction";
+import { CreateApiActionConfigParam } from "./interfaces/CreateApiActionConfigParam";
+import { FetchFromApiFailedAction } from "./interfaces/FetchFromApiFailedAction";
+import { FetchFromApiSuccessAction } from "./interfaces/FetchFromApiSuccessAction";
+import { ApiResponse } from "./interfaces/ResponseData";
 
 export class ApiActionCreator {
     public static createAction(config: CreateApiActionConfigParam) {
@@ -71,6 +71,7 @@ export class ApiActionCreator {
         },
         additionalUrlParam,
         apiActionType = ApiActionType.JsonApiRequest,
+        preserveRequestTrailingSlash,
     }: CreateApiActionConfigParam): ApiReduxAction {
         let operationValue: string;
         if (operation instanceof ApiOperation) {
@@ -80,11 +81,12 @@ export class ApiActionCreator {
             operationValue = id ? `${operation}_${id}` : operation;
         }
 
-        const formattedEndpoint = ApiActionCreator.createEndpoint(
+        const formattedEndpoint = ApiActionCreator.createEndpoint({
             endpoint,
             id,
             additionalUrlParam,
-        );
+            preserveRequestTrailingSlash,
+        });
 
         return {
             // todo: maybe simplify this to not include whole query?
@@ -137,11 +139,17 @@ export class ApiActionCreator {
         };
     }
 
-    private static createEndpoint(
-        endpoint: Endpoint,
-        id?: string,
-        additionalUrlParam?: string,
-    ): string {
+    private static createEndpoint({
+        endpoint,
+        id,
+        additionalUrlParam,
+        preserveRequestTrailingSlash,
+    }: {
+        endpoint: Endpoint;
+        id?: string;
+        additionalUrlParam?: string;
+        preserveRequestTrailingSlash?: boolean;
+    }): string {
         const trailingSlashEndpoint =
             endpoint.substr(-1) === "/" ? endpoint : `${endpoint}/`;
 
@@ -160,6 +168,10 @@ export class ApiActionCreator {
 
         if (additionalUrlParam !== undefined && additionalUrlParam !== "") {
             return `${trailingSlashEndpoint}${additionalUrlParam}`;
+        }
+
+        if (preserveRequestTrailingSlash) {
+            return trailingSlashEndpoint;
         }
 
         return endpoint.replace(/\/$/, "");

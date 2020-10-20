@@ -15,6 +15,8 @@ export class JsonApiQuery {
     private readonly customParams: CustomParam[];
     private readonly sortKeyName: string;
     private urlSearchParams = new URLSearchParams();
+    private readonly pageNumberKeyName: string = "page[number]";
+    private readonly pageSizeKeyName: string = "page[size]";
 
     constructor(config: JsonApiQueryConfig) {
         this.initialConfig = config;
@@ -24,6 +26,13 @@ export class JsonApiQuery {
         this.filterConfigs = config.filters || [];
         this.customParams = config.customParams || [];
         this.sortKeyName = config.sortKeyName || "sort";
+
+        if (config.pageNumberKeyName) {
+            this.pageNumberKeyName = config.pageNumberKeyName;
+        }
+        if (config.pageSizeKeyName) {
+            this.pageSizeKeyName = config.pageSizeKeyName;
+        }
 
         this.init();
     }
@@ -115,11 +124,14 @@ export class JsonApiQuery {
         const { pageNumber, pageSize } = paginationConfig;
 
         if (pageNumber !== undefined) {
-            urlSearchParams.append("pageNumber", pageNumber.toString());
+            urlSearchParams.append(
+                this.pageNumberKeyName,
+                pageNumber.toString(),
+            );
         }
 
         if (pageSize !== undefined) {
-            urlSearchParams.append("pageSize", pageSize.toString());
+            urlSearchParams.append(this.pageSizeKeyName, pageSize.toString());
         }
     }
 

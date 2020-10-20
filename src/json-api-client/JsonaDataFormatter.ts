@@ -1,12 +1,17 @@
 import { Jsona } from "jsona";
-import { TJsonApiData, TReduxObject } from "jsona/lib/JsonaTypes";
+import {
+    TAnyKeyValueObject,
+    TJsonApiData,
+    TReduxObject,
+} from "jsona/lib/JsonaTypes";
 import { TJsonApiBody } from "jsona/src/JsonaTypes";
+import { JsonApiData } from "..";
 import { Entities } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
 import { SerializeJsonApiModelParamType } from "../interfaces/SerializeJsonApiModelParam";
-import { JsonApiData } from "./interfaces/JsonApiData";
-import { SerializedMergedData } from "./interfaces/SerializedMergedData";
+import { CustomModelPropertiesMapper } from "./CustomModelPropertiesMapper";
 import { JsonApiRelationships } from "./interfaces/JsonApiRelationships";
+import { SerializedMergedData } from "./interfaces/SerializedMergedData";
 
 interface SingleIdOpts {
     reduxObject: Entities;
@@ -22,7 +27,9 @@ interface MultipleIdOpts {
     returnBuilderInRelations?: boolean;
 }
 
-const jsonaDenormalizer = new Jsona();
+const jsonaDenormalizer = new Jsona({
+    modelPropertiesMapper: new CustomModelPropertiesMapper(),
+});
 
 function denormalizeReduxObject<T>(options: SingleIdOpts): null | T;
 function denormalizeReduxObject<T>(options: MultipleIdOpts): null | T[];
@@ -56,7 +63,7 @@ class JsonaDataFormatter {
             stuff: model,
             includeNames,
         });
-        this.stripClientGeneratedEntityData(serializedData.data as JsonApiData);
+        this.stripRedundantData(serializedData.data as JsonApiData);
         if (serializedData.included === undefined) {
             return serializedData;
         }
@@ -104,6 +111,44 @@ class JsonaDataFormatter {
             delete entity.attributes.__clientGeneratedEntity;
         }
 
+        // set attributes object to undefined if empty
+        if (entity.attributes && Object.keys(entity.attributes).length === 0) {
+            entity.attributes = undefined;
+        }
+
+        return entity;
+    }
+
+    private removeEmptyAttributesFromRelationships(
+        entity: JsonApiData,
+    ): JsonApiData {
+        if (entity.relationships) {
+            Object.entries(entity.relationships).forEach(
+                ([_relationshipName, relationship]) => {
+                    if (Array.isArray(relationship.data)) {
+                        relationship.data = relationship.data.map((entity) => {
+                            if (
+                                entity.attributes &&
+                                Object.keys(entity.attributes).length === 0
+                            ) {
+                                return { ...entity, attributes: undefined };
+                            }
+                            return entity;
+                        });
+                    }
+                    if (
+                        (relationship.data as JsonApiData).attributes !==
+                            undefined &&
+                        Object.keys(
+                            (relationship.data as JsonApiData)
+                                .attributes as TAnyKeyValueObject,
+                        ).length === 0
+                    ) {
+                        (relationship.data as JsonApiData).attributes = undefined;
+                    }
+                },
+            );
+        }
         return entity;
     }
 
@@ -118,9 +163,10 @@ class JsonaDataFormatter {
         return entity;
     }
 
-    private stripClientGeneratedEntityData(entity: JsonApiData) {
+    private stripRedundantData(entity: JsonApiData) {
         this.removeIdFieldFromClientGeneratedEntity(entity);
         this.removeClientGeneratedEntityFlag(entity);
+        this.removeEmptyAttributesFromRelationships(entity);
     }
 
     private getMergedIncludedDataWithRelationshipData(
@@ -193,7 +239,7 @@ class JsonaDataFormatter {
             );
         }
 
-        this.stripClientGeneratedEntityData(element);
+        this.stripRedundantData(element);
 
         return element;
     }

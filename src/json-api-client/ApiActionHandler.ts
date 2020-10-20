@@ -27,6 +27,7 @@ export class ApiActionHandler<T extends JSONAModel> {
         private endpoint: Endpoint,
         public readonly apiSelector: BaseApiSelector<T>,
         private transformId?: (id: string) => string,
+        private preserveRequestTrailingSlash?: boolean,
     ) {
         this.operationUtility = new ApiOperationUtility(resourceType);
     }
@@ -85,6 +86,7 @@ export class ApiActionHandler<T extends JSONAModel> {
                 operation,
                 method,
                 requestConfig: { data: rawData, headers },
+                preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
             });
         }
 
@@ -104,6 +106,7 @@ export class ApiActionHandler<T extends JSONAModel> {
             operation,
             method,
             requestConfig: { data: serializedData },
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 
@@ -130,6 +133,7 @@ export class ApiActionHandler<T extends JSONAModel> {
             method: RequestMethod.Get,
             requestConfig:
                 jsonApiQuery && jsonApiQuery.getRequestConfig(headers),
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         };
 
         return ApiActionCreator.createAction(config);
@@ -156,6 +160,7 @@ export class ApiActionHandler<T extends JSONAModel> {
             method,
             requestConfig: jsonApiQuery.getRequestConfig(headers),
             additionalUrlParam,
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 
@@ -183,6 +188,7 @@ export class ApiActionHandler<T extends JSONAModel> {
                 data: serializedData,
                 headers,
             },
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 
@@ -203,6 +209,7 @@ export class ApiActionHandler<T extends JSONAModel> {
             operation,
             method,
             requestConfig: { headers },
+            preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }
 }

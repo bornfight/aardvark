@@ -4,5 +4,4 @@ export interface UseGetParams<T> {
     includes?: string[];
     headers?: { [key: string]: string };
     additionalUrlParam?: string;
-    a: number;
 }

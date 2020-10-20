@@ -38,7 +38,7 @@ export const useGet = <
 
     useEffect(() => {
         dispatch(action);
-    }, [action, dispatch]);
+    }, [action, dispatch, headers]);
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
     const loading = useSelector((state: RootState) => {
