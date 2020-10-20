@@ -2,6 +2,7 @@ import { act, renderHook } from "@testing-library/react-hooks";
 import MockAdapter from "axios-mock-adapter";
 import React from "react";
 import { Provider } from "react-redux";
+import { AardvarkProvider } from "../test-utils/AardvarkProvider";
 import { usePost } from "../hooks";
 import { carActionHandler } from "../test-utils/CarActionHandler";
 import { configureStore } from "../test-utils/configureStore";
@@ -14,18 +15,20 @@ describe("usePost", () => {
         children: any;
         reduxStore: any;
     }) => <Provider store={reduxStore}>{children}</Provider>;
-    const { store: mockStore, apiSaga } = configureStore();
+    const { store: mockStore, aardvark } = configureStore();
 
     afterEach(() => {
         jest.resetAllMocks();
     });
 
     const wrapper = ({ children }: { children: any }) => (
-        <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
+        <AardvarkProvider httpAdapter={aardvark.apiService.httpAdapter}>
+            <ReduxProvider reduxStore={mockStore}>{children}</ReduxProvider>
+        </AardvarkProvider>
     );
 
     it("should post data with JSONApiModel", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
 
         mock.onPost("/cars").reply(200, {
             data: {
@@ -72,7 +75,7 @@ describe("usePost", () => {
     });
 
     it("should post data with rawData ", async () => {
-        const mock = new MockAdapter(apiSaga.apiService.httpAdapter);
+        const mock = new MockAdapter(aardvark.apiService.httpAdapter);
 
         mock.onPost("/cars").reply(200, {
             data: {

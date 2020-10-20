@@ -14,6 +14,7 @@ import {
     usePost,
     usePatch,
     useDelete,
+    useRequest,
 } from "./hooks";
 import { FuzzySearchType } from "./enums/FuzzySearchType";
 import { JsonApiQuery } from "./services/JsonApiQuery/JsonApiQuery";
@@ -40,6 +41,7 @@ import {
 } from "./normalizers/JSONANormalizer";
 import { ApiDataState } from "./interfaces/ApiDataState";
 import { JsonApiData } from "./json-api-client/interfaces/JsonApiData";
+import { Aardvark } from "./Aardvark";
 
 export {
     ApiSaga,
@@ -57,6 +59,7 @@ export {
     usePost,
     usePatch,
     useDelete,
+    useRequest,
     FuzzySearchType,
     JsonApiQuery,
     JsonApiQueryConfig,
@@ -80,4 +83,5 @@ export {
     Normalizer,
     ApiDataState,
     JsonApiData,
+    Aardvark,
 };

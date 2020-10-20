@@ -10,4 +10,6 @@ export interface JsonApiQueryConfig {
     paginationConfig?: PaginationConfig;
     customParams?: CustomParam[];
     sortKeyName?: string;
+    pageNumberKeyName?: string;
+    pageSizeKeyName?: string;
 }

@@ -1,4 +1,5 @@
 import { compose, createStore, Store } from "redux";
+import { Aardvark } from "../Aardvark";
 import { RecursivePartial } from "../interfaces/RecursivePartial";
 import { RootState } from "../interfaces/RootState";
 import { ApiSaga } from "../sagas/ApiSaga";
@@ -21,14 +22,16 @@ export const configureStore = ({
 } = {}): {
     apiSaga: ApiSaga;
     store: Store;
+    aardvark: Aardvark;
     sagaMiddleware: SagaMiddleware;
 } => {
+    const aardvark = new Aardvark({ baseURL: "" });
     const {
         apiSaga,
         sagaMiddleware,
         rootSaga,
         storeEnhancer,
-    } = createMiddleware();
+    } = createMiddleware(aardvark.apiService);
 
     const store: Store<RootState> = createStore(
         rootReducer,
@@ -50,5 +53,6 @@ export const configureStore = ({
         apiSaga,
         store,
         sagaMiddleware,
+        aardvark,
     };
 };

@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0-beta.1",
+    "version": "1.0.0-beta.4",
     "license": "MIT",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
@@ -16,7 +16,8 @@
         "test": "tsdx test --passWithNoTests",
         "test:watch": "tsdx test --watch",
         "lint": "tsdx lint src",
-        "prepare": "tsdx build"
+        "prepare": "tsdx build",
+        "format-with-prettier": "prettier --write src/**/*.{ts,tsx}"
     },
     "peerDependencies": {
         "react": ">=16",

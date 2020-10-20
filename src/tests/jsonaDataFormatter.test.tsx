@@ -176,6 +176,159 @@ describe("jsonaDataFormatter", () => {
 
         expect(serializedRequestData).toEqual(expectedSerializedRequestData);
     });
+    it("should properly serialize request data - relationship's relationship - array of objects with no attributes", async () => {
+        const requestData = {
+            id: "1",
+            type: "car",
+            color: "green",
+            owner: [
+                {
+                    id: "2",
+                    type: "owner",
+                    diploma: [
+                        {
+                            id: "4",
+                            type: "diploma",
+                            document: {
+                                id: "6",
+                                type: "document",
+                            },
+                            relationshipNames: ["document"],
+                        },
+                    ],
+                    relationshipNames: ["diploma"],
+                },
+            ],
+            relationshipNames: ["owner"],
+        };
+        const expectedSerializedRequestData = {
+            data: {
+                id: "1",
+                type: "car",
+                attributes: { color: "green" },
+                relationships: {
+                    owner: {
+                        data: [
+                            {
+                                id: "2",
+                                type: "owner",
+                                attributes: undefined,
+                                relationships: {
+                                    diploma: {
+                                        data: [
+                                            {
+                                                id: "4",
+                                                type: "diploma",
+                                                attributes: undefined,
+                                                relationships: {
+                                                    document: {
+                                                        data: {
+                                                            id: "6",
+                                                            type: "document",
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        };
+        const serializedRequestData = jsonaDataFormatter.serializeWithInlineRelationships(
+            {
+                model: requestData,
+                includeNames: ["owner.diploma.document"],
+            },
+        );
+
+        expect(serializedRequestData).toEqual(expectedSerializedRequestData);
+    });
+
+    it("should properly serialize request data - relationship's relationship - array of objects with attributes", async () => {
+        const requestData = {
+            id: "1",
+            type: "car",
+            color: "green",
+            owner: [
+                {
+                    id: "2",
+                    type: "owner",
+                    firstName: "Ivana",
+                    lastName: "Ivanic",
+                    diploma: [
+                        {
+                            id: "4",
+                            type: "diploma",
+                            name: "diploma-one",
+                            date: "01.10.2020",
+                            document: {
+                                id: "6",
+                                type: "document",
+                            },
+                            relationshipNames: ["document"],
+                        },
+                    ],
+                    relationshipNames: ["diploma"],
+                },
+            ],
+            relationshipNames: ["owner"],
+        };
+        const expectedSerializedRequestData = {
+            data: {
+                id: "1",
+                type: "car",
+                attributes: { color: "green" },
+                relationships: {
+                    owner: {
+                        data: [
+                            {
+                                id: "2",
+                                type: "owner",
+                                attributes: {
+                                    firstName: "Ivana",
+                                    lastName: "Ivanic",
+                                },
+                                relationships: {
+                                    diploma: {
+                                        data: [
+                                            {
+                                                id: "4",
+                                                type: "diploma",
+                                                attributes: {
+                                                    name: "diploma-one",
+                                                    date: "01.10.2020",
+                                                },
+                                                relationships: {
+                                                    document: {
+                                                        data: {
+                                                            id: "6",
+                                                            type: "document",
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        ],
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+            },
+        };
+        const serializedRequestData = jsonaDataFormatter.serializeWithInlineRelationships(
+            {
+                model: requestData,
+                includeNames: ["owner.diploma.document"],
+            },
+        );
+
+        expect(serializedRequestData).toEqual(expectedSerializedRequestData);
+    });
 
     it("should properly return attributes as undefined if __clientGeneratedEntity is the only attribute", async () => {
         const requestData = {
