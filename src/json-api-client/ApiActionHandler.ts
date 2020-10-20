@@ -71,6 +71,7 @@ export class ApiActionHandler<T extends JSONAModel> {
     public create(
         data: ActionPostData,
         headers?: { [key: string]: string },
+        additionalUrlParam?: string,
     ): ApiThunkAction {
         const method = RequestMethod.Post;
         const operation = new ApiOperation({
@@ -95,8 +96,13 @@ export class ApiActionHandler<T extends JSONAModel> {
             { model, includeNames },
         );
 
+        let endpoint = this.endpoint;
+        if (additionalUrlParam) {
+            endpoint = this.endpoint + additionalUrlParam;
+        }
+
         return ApiActionCreator.createAction({
-            endpoint: this.endpoint,
+            endpoint,
             operation,
             method,
             requestConfig: { data: serializedData },
@@ -107,6 +113,7 @@ export class ApiActionHandler<T extends JSONAModel> {
     public getAll(
         jsonApiQuery?: JsonApiQuery,
         headers?: { [key: string]: string },
+        additionalUrlParam?: string,
     ): ApiThunkAction {
         const method = RequestMethod.Get;
         const operation = new ApiOperation({
@@ -115,8 +122,13 @@ export class ApiActionHandler<T extends JSONAModel> {
             jsonApiQuery,
         });
 
+        let endpoint = this.endpoint;
+        if (additionalUrlParam) {
+            endpoint = this.endpoint + additionalUrlParam;
+        }
+
         const config = {
-            endpoint: this.endpoint,
+            endpoint,
             operation,
             method: RequestMethod.Get,
             requestConfig:
@@ -131,6 +143,7 @@ export class ApiActionHandler<T extends JSONAModel> {
         id: string,
         includes: string[] = [],
         headers?: { [key: string]: string },
+        additionalUrlParam?: string,
     ): ApiThunkAction {
         const jsonApiQuery = new JsonApiQuery({ includes });
         const method = RequestMethod.Get;
@@ -146,6 +159,7 @@ export class ApiActionHandler<T extends JSONAModel> {
             operation,
             method,
             requestConfig: jsonApiQuery.getRequestConfig(headers),
+            additionalUrlParam,
             preserveRequestTrailingSlash: this.preserveRequestTrailingSlash,
         });
     }

@@ -17,6 +17,7 @@ export const useGetAll = <
     apiActionHandler: T,
     jsonApiQuery?: JsonApiQuery,
     headers?: { [key: string]: string },
+    additionalUrlParam?: string,
 ): {
     operation: Operation;
     ids: string[];
@@ -25,9 +26,17 @@ export const useGetAll = <
     count: number | undefined;
 } => {
     const dispatch = useDispatch();
+    let action = apiActionHandler.getAll(jsonApiQuery, headers);
+    if (additionalUrlParam) {
+        action = apiActionHandler.getAll(
+            jsonApiQuery,
+            headers,
+            additionalUrlParam,
+        );
+    }
     useEffect(() => {
-        dispatch(apiActionHandler.getAll(jsonApiQuery, headers));
-    }, [apiActionHandler, jsonApiQuery, dispatch, headers]);
+        dispatch(action);
+    }, [apiActionHandler, jsonApiQuery, dispatch, action]);
 
     const operation = apiActionHandler.operationUtility.getOperationGetAll(
         jsonApiQuery,

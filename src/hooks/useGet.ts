@@ -7,6 +7,7 @@ import { RootState } from "../interfaces/RootState";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { StateHelper } from "../services/StateHelper/StateHelper";
 import { ExtractJSONAModel } from "../types/UtilityTypes";
+import { ApiThunkAction } from "../json-api-client/interfaces/ApiThunkAction";
 
 export const useGet = <
     T extends ApiActionHandler<JSONAModel>,
@@ -16,15 +17,28 @@ export const useGet = <
     id: string,
     includes?: string[],
     headers?: { [key: string]: string },
+    additionalUrlParam?: string,
 ): {
     operation: Operation;
     record: F | null;
     loading: boolean;
 } => {
     const dispatch = useDispatch();
+    let action: ApiThunkAction | undefined = undefined;
+    if (additionalUrlParam) {
+        action = apiActionHandler.get(
+            id,
+            includes,
+            headers,
+            additionalUrlParam,
+        );
+    } else {
+        action = apiActionHandler.get(id, includes, headers);
+    }
+
     useEffect(() => {
-        dispatch(apiActionHandler.get(id, includes, headers));
-    }, [apiActionHandler, id, includes, dispatch, headers]);
+        dispatch(action);
+    }, [action, dispatch, headers]);
 
     const operation = apiActionHandler.operationUtility.getOperationGet(id);
     const loading = useSelector((state: RootState) => {

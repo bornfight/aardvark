@@ -17,6 +17,7 @@ export const usePost = <
 >(
     apiActionHandler: T,
     headers?: { [key: string]: string },
+    additionalUrlParam?: string,
 ): {
     operation: Operation;
     record: F | null;
@@ -29,7 +30,15 @@ export const usePost = <
     const create = useCallback(
         (data: ActionPostData) => {
             return new Promise<JsonApiObject>((resolve, reject) => {
-                dispatch(apiActionHandler.create(data, headers))
+                let action = apiActionHandler.create(data, headers);
+                if (additionalUrlParam) {
+                    action = apiActionHandler.create(
+                        data,
+                        headers,
+                        additionalUrlParam,
+                    );
+                }
+                dispatch(action)
                     .then((response) => {
                         setId((response?.data as JsonApiObject)?.id || "");
                         resolve(response?.data as JsonApiObject);
