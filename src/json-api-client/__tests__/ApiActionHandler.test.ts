@@ -1,9 +1,10 @@
 /* tslint:disable:max-classes-per-file */
 
-import { createMockStore } from "../../test-utils/createMockStore";
-import { ResourceType } from "../../interfaces/ResourceType";
 import { FooActionHandler } from "../../__fixtures__/FooActionHandler";
+import { SlashActionHandler } from "../../__fixtures__/SlashActionHandler";
+import { ResourceType } from "../../interfaces/ResourceType";
 import { JsonApiQuery } from "../../services/JsonApiQuery/JsonApiQuery";
+import { createMockStore } from "../../test-utils/createMockStore";
 import { FooJSONAModel } from "../__fixtures__/FooJSONAModel";
 
 const store = createMockStore({
@@ -80,9 +81,9 @@ describe("ApiActionHandler", () => {
             const { reject, resolve, requestConfig, ...rest } = calledAction;
 
             expect(rest).toEqual({
-                type: "@@api/INITIAL_GET_FOO_PAGENUMBER=10&PAGESIZE=100",
+                type: "@@api/INITIAL_GET_FOO_PAGE[NUMBER]=10&PAGE[SIZE]=100",
                 apiActionType: "jsonApiRequest",
-                operation: "GET_FOO_PAGENUMBER=10&PAGESIZE=100",
+                operation: "GET_FOO_PAGE[NUMBER]=10&PAGE[SIZE]=100",
                 status: "begin",
                 endpoint: "/foo",
                 method: "get",
@@ -91,7 +92,7 @@ describe("ApiActionHandler", () => {
             expect(reject).toEqual(expect.any(Function));
             expect(resolve).toEqual(expect.any(Function));
             expect(decodeURIComponent(requestConfig.params.toString())).toEqual(
-                "pageNumber=10&pageSize=100",
+                "page[number]=10&page[size]=100",
             );
         });
 
@@ -266,6 +267,30 @@ describe("ApiActionHandler", () => {
                     },
                 },
             });
+        });
+    });
+
+    describe("#preserveRequestTrailingSlash", () => {
+        const slashActionHandler = new SlashActionHandler();
+        it("should create correct request endpoint with trailing slash", () => {
+            const action = slashActionHandler.getAll();
+
+            store.dispatch(action);
+            const storeActions = store.getActions();
+            const calledAction = storeActions[0];
+            const { reject, resolve, requestConfig, ...rest } = calledAction;
+
+            expect(rest).toEqual({
+                type: "@@api/INITIAL_GET_SLASH",
+                apiActionType: "jsonApiRequest",
+                operation: "GET_SLASH",
+                status: "begin",
+                endpoint: "/slash/",
+                method: "get",
+            });
+
+            expect(reject).toEqual(expect.any(Function));
+            expect(resolve).toEqual(expect.any(Function));
         });
     });
 });

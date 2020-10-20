@@ -29,7 +29,7 @@ export const useGetAll = <
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(apiActionHandler.getAll(jsonApiQuery, headers));
-    }, [apiActionHandler, jsonApiQuery, dispatch]);
+    }, [apiActionHandler, jsonApiQuery, dispatch, headers]);
 
     const operation = apiActionHandler.operationUtility.getOperationGetAll(
         jsonApiQuery,

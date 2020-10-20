@@ -68,6 +68,38 @@ describe("ApiOperation", () => {
         });
 
         describe("with JsonApiQuery", () => {
+            it("should allow custom page size key name", () => {
+                const actual = new ApiOperation({
+                    resourceType: "foo" as ResourceType,
+                    method: RequestMethod.Get,
+                    jsonApiQuery: new JsonApiQuery({
+                        paginationConfig: {
+                            pageSize: 10,
+                            pageNumber: 3,
+                        },
+                        pageSizeKeyName: "pageSize",
+                    }),
+                }).getValue();
+
+                expect(actual).toEqual("GET_FOO_PAGE[NUMBER]=3&PAGESIZE=10");
+            });
+
+            it("should allow custom page number key name", () => {
+                const actual = new ApiOperation({
+                    resourceType: "foo" as ResourceType,
+                    method: RequestMethod.Get,
+                    jsonApiQuery: new JsonApiQuery({
+                        paginationConfig: {
+                            pageSize: 10,
+                            pageNumber: 3,
+                        },
+                        pageNumberKeyName: "pageNumber",
+                    }),
+                }).getValue();
+
+                expect(actual).toEqual("GET_FOO_PAGENUMBER=3&PAGE[SIZE]=10");
+            });
+
             it("should create a correct GET operation with a whole pagination config", () => {
                 const actual = new ApiOperation({
                     resourceType: "foo" as ResourceType,
@@ -80,7 +112,7 @@ describe("ApiOperation", () => {
                     }),
                 }).getValue();
 
-                expect(actual).toEqual("GET_FOO_PAGENUMBER=3&PAGESIZE=10");
+                expect(actual).toEqual("GET_FOO_PAGE[NUMBER]=3&PAGE[SIZE]=10");
             });
 
             it("should create a correct GET operation with page size", () => {
@@ -94,7 +126,7 @@ describe("ApiOperation", () => {
                     }),
                 }).getValue();
 
-                expect(actual).toEqual("GET_FOO_PAGESIZE=100");
+                expect(actual).toEqual("GET_FOO_PAGE[SIZE]=100");
             });
 
             it("should create a correct GET operation with page number", () => {
@@ -108,7 +140,7 @@ describe("ApiOperation", () => {
                     }),
                 }).getValue();
 
-                expect(actual).toEqual("GET_FOO_PAGENUMBER=100");
+                expect(actual).toEqual("GET_FOO_PAGE[NUMBER]=100");
             });
 
             it("should create a correct GET operation with a blank jsonApiQuery", () => {
@@ -143,7 +175,7 @@ describe("ApiOperation", () => {
                 }).getValue();
 
                 expect(actual).toEqual(
-                    "GET_FOO_INCLUDE=BARS,ABCS&FILTER[TESTCRITERIA]=AMAZING&SORT=BARS&PAGENUMBER=100&PAGESIZE=30&ONLYFREE=TRUE",
+                    "GET_FOO_INCLUDE=BARS,ABCS&FILTER[TESTCRITERIA]=AMAZING&SORT=BARS&PAGE[NUMBER]=100&PAGE[SIZE]=30&ONLYFREE=TRUE",
                 );
             });
         });

@@ -9,6 +9,7 @@ import {
     Entities,
     Entity,
     MetaData,
+    Identifiers,
 } from "../interfaces/ApiDataState";
 import { ResourceType } from "../interfaces/ResourceType";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
@@ -79,10 +80,6 @@ export class JsonApiReducer {
         state: ApiDataState,
         action: FetchFromApiSuccessAction,
     ): ApiDataState {
-        if (action.method === RequestMethod.Delete) {
-            return { meta: {}, html: {}, entities: {} };
-        }
-
         if (action.apiActionType === ApiActionType.HtmlRequest) {
             return this.createSuccessStateForHTML(state, action);
         }
@@ -91,8 +88,8 @@ export class JsonApiReducer {
             action.responseData,
             action.method,
         );
-        const dataMeta = action.responseData.meta;
 
+        const dataMeta = action?.responseData?.meta;
         const meta: MetaData = {
             [action.operation]: {
                 [action.method]: {
@@ -105,6 +102,18 @@ export class JsonApiReducer {
                 },
             },
         };
+        const newMeta = this.createNewMeta(state.meta, meta);
+        if (action.method === RequestMethod.Delete) {
+            const newEntities = this.getEntitiesWithoutDeletedItem(
+                state.entities,
+                action.endpoint,
+            );
+            return {
+                meta: newMeta,
+                html: state.html,
+                entities: newEntities,
+            };
+        }
 
         const normalizedJsonApiResponseData = normalize(
             action.responseData as JsonApiResponse,
@@ -122,7 +131,6 @@ export class JsonApiReducer {
             nextCollections,
         );
 
-        const newMeta = this.createNewMeta(state.meta, meta);
         const areEntitiesEqual = isEqual(mergedCollections, state.entities);
 
         // whole state should not be passed as entries must be handled by helper functions
@@ -134,6 +142,39 @@ export class JsonApiReducer {
                 entities: areEntitiesEqual ? state.entities : mergedCollections,
             },
         );
+    }
+
+    private getEntitiesWithoutDeletedItem(
+        entities: Entities,
+        endpoint: string,
+    ): Entities {
+        // endpoint is of the following format: "/cars/2"
+        const resourceType = endpoint.split("/")[1];
+        const recordId = endpoint.split("/")[2];
+        const {
+            [resourceType]: targetResource,
+            ...entitiesWithoutTargetResource
+        } = entities;
+
+        /**
+         * nothing to delete, returning initial state
+         */
+        if (targetResource && targetResource[recordId] === undefined) {
+            return entities;
+        }
+
+        // Removes the request-deleted item from object of objects extracted above
+        const {
+            [recordId]: removedValue,
+            ...targetResourceWithoutDeletedKey
+            // casting to identifiers because of the check for undefined in the earlier conditional
+        } = targetResource as Identifiers;
+
+        // Merge back together
+        return {
+            ...entitiesWithoutTargetResource,
+            [resourceType]: targetResourceWithoutDeletedKey,
+        };
     }
 
     private createNewMeta(oldMeta: MetaData, newMeta: MetaData) {
