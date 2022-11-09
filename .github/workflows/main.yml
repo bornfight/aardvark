@@ -31,30 +31,3 @@ jobs:
         run: yarn test --ci --coverage --maxWorkers=2
         env:
           CI: true
-
-  publish:
-    needs: [ ci ]
-    runs-on: ubuntu-latest
-
-    if: github.event_name == 'push' && needs.ci.result == 'success'
-
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-          registry-url: 'https://registry.npmjs.org'
-          scope: '@bornfight'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-        env:
-          CI: true
-
-      - name: Build
-        run: yarn build
-        env:
-          CI: true
-
-      - name: Publish
-        run: yarn publish
