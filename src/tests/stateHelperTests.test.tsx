@@ -8,6 +8,7 @@ import { carActionHandler } from "../test-utils/CarActionHandler";
 import { configureStore } from "../test-utils/configureStore";
 import { ApiActionType } from "../services/ApiActionCreator/enums/ApiActionType";
 import { END } from "redux-saga";
+import { RootState } from "../interfaces/RootState";
 
 describe("StateHelper", () => {
     const ReduxProvider = ({
@@ -48,9 +49,12 @@ describe("StateHelper", () => {
             },
         );
 
-        const { result: storeResult } = renderHook(() => useStore(), {
-            wrapper,
-        });
+        const { result: storeResult } = renderHook(
+            () => useStore<RootState>(),
+            {
+                wrapper,
+            },
+        );
 
         const state = storeResult.current.getState();
         await waitForNextUpdate();
@@ -90,9 +94,12 @@ describe("StateHelper", () => {
             },
         );
 
-        const { result: storeResult } = renderHook(() => useStore(), {
-            wrapper,
-        });
+        const { result: storeResult } = renderHook(
+            () => useStore<RootState>(),
+            {
+                wrapper,
+            },
+        );
 
         const state = storeResult.current.getState();
         await waitForNextUpdate();

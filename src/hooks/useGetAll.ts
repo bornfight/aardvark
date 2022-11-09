@@ -9,6 +9,7 @@ import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { JsonApiQuery } from "../services/JsonApiQuery/JsonApiQuery";
 import { StateHelper } from "../services/StateHelper/StateHelper";
 import { ExtractJSONAModel } from "../types/UtilityTypes";
+import { Dispatch } from "../interfaces/Dispatch";
 
 export const useGetAll = <
     T extends ApiActionHandler<JSONAModel>,
@@ -24,7 +25,7 @@ export const useGetAll = <
     loading: boolean;
     count: number | undefined;
 } => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Dispatch>();
     useEffect(() => {
         dispatch(apiActionHandler.getAll(jsonApiQuery, headers));
     }, [apiActionHandler, jsonApiQuery, dispatch, headers]);

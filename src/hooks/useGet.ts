@@ -7,6 +7,7 @@ import { RootState } from "../interfaces/RootState";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { StateHelper } from "../services/StateHelper/StateHelper";
 import { ExtractJSONAModel } from "../types/UtilityTypes";
+import { Dispatch } from "../interfaces/Dispatch";
 
 export const useGet = <
     T extends ApiActionHandler<JSONAModel>,
@@ -21,7 +22,7 @@ export const useGet = <
     record: F | null;
     loading: boolean;
 } => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Dispatch>();
     useEffect(() => {
         dispatch(apiActionHandler.get(id, includes, headers));
     }, [apiActionHandler, id, includes, dispatch, headers]);
