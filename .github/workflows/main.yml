@@ -10,7 +10,7 @@ on:
 
 jobs:
   ci:
-    runs-on: [ self-hosted, node ]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -34,7 +34,7 @@ jobs:
 
   publish:
     needs: [ ci ]
-    runs-on: [ self-hosted, node ]
+    runs-on: ubuntu-latest
 
     if: github.event_name == 'push' && needs.ci.result == 'success'
 
