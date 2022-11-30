@@ -1,6 +1,7 @@
 import { JsonApiObject } from "json-api-normalizer";
 import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { SerializeJsonApiModelPostParam } from "../interfaces/SerializeJsonApiModelParam";
 import { ApiActionHandler } from "..";
 import { Dispatch } from "../interfaces/Dispatch";
 import { JSONAModel } from "../interfaces/JSONAModel";
@@ -10,6 +11,16 @@ import { ActionPostData } from "../json-api-client/interfaces/ActionPostData";
 import { RequestMethod } from "../selectors/enums/RequestMethod";
 import { StateHelper } from "../services/StateHelper/StateHelper";
 import { ExtractJSONAModel } from "../types/UtilityTypes";
+
+const checkValidity = (serializeModelParam: ActionPostData) => {
+    if (
+        (serializeModelParam as SerializeJsonApiModelPostParam)?.model &&
+        (serializeModelParam as SerializeJsonApiModelPostParam)?.model?.type ===
+            undefined
+    ) {
+        console.warn("Wrong JSONA model, type must be present in the model.");
+    }
+};
 
 export const usePost = <
     T extends ApiActionHandler<JSONAModel>,
@@ -28,6 +39,7 @@ export const usePost = <
 
     const create = useCallback(
         (data: ActionPostData) => {
+            checkValidity(data);
             return new Promise<JsonApiObject>((resolve, reject) => {
                 dispatch(apiActionHandler.create(data, headers))
                     .then((response) => {
