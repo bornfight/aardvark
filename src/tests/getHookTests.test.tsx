@@ -62,6 +62,14 @@ describe("useGet", () => {
             model: "GLL",
             year: "2020",
         });
+        expect(result.current.meta).toEqual({
+            loading: false,
+            status: "success",
+            endpoint: "/cars/1",
+            entities: [{ id: "1", type: "car" }],
+            error: undefined,
+            dataMeta: undefined,
+        });
     });
 
     it("should correctly fetch data with given action handler - useGetAll", async () => {
@@ -117,6 +125,17 @@ describe("useGet", () => {
                 year: "2021",
             },
         ]);
+        expect(result.current.meta).toEqual({
+            loading: false,
+            status: "success",
+            endpoint: "/cars",
+            entities: [
+                { id: "1", type: "car" },
+                { id: "2", type: "car" },
+            ],
+            error: undefined,
+            dataMeta: undefined,
+        });
     });
 
     it("should correctly fetch data with given action handler - useGetControlled", async () => {
@@ -151,6 +170,15 @@ describe("useGet", () => {
                 brand: "GetCar",
                 model: "GCLL",
                 year: "2020",
+            });
+
+            expect(result.current.meta).toEqual({
+                loading: false,
+                status: "success",
+                endpoint: "/cars/3",
+                entities: [{ id: "3", type: "car" }],
+                error: undefined,
+                dataMeta: undefined,
             });
         });
     });
@@ -208,6 +236,17 @@ describe("useGet", () => {
                     year: "2021",
                 },
             ]);
+            expect(result.current.meta).toEqual({
+                loading: false,
+                status: "success",
+                endpoint: "/cars",
+                entities: [
+                    { type: "car", id: "4" },
+                    { type: "car", id: "5" },
+                ],
+                error: undefined,
+                dataMeta: undefined,
+            });
         });
     });
 });

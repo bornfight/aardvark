@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ApiActionHandler } from "..";
+import { OperationMeta } from "../interfaces/ApiDataState";
+import { ApiActionHandler, apiSelectors } from "..";
 import { JSONAModel } from "../interfaces/JSONAModel";
 import { Operation } from "../interfaces/Operation";
 import { RootState } from "../interfaces/RootState";
@@ -21,6 +22,7 @@ export const useGet = <
     operation: Operation;
     record: F | null;
     loading: boolean;
+    meta?: OperationMeta;
 } => {
     const dispatch = useDispatch<Dispatch>();
     useEffect(() => {
@@ -38,9 +40,19 @@ export const useGet = <
         ) as unknown) as F;
     });
 
+    const meta = useSelector((state: RootState) => {
+        return apiSelectors.getOperationMeta(
+            state,
+            operation,
+            undefined,
+            RequestMethod.Get,
+        );
+    });
+
     return {
         operation,
         record,
         loading,
+        meta,
     };
 };
