@@ -44,6 +44,12 @@ export const usePatch = <
                     ),
                 )
                     .then((response) => {
+                        // fetch updated, triggers store update
+                        dispatch(
+                            apiActionHandler.get(
+                                (response?.data as JsonApiObject)?.id,
+                            ),
+                        );
                         resolve(response?.data as JsonApiObject);
                     })
                     .catch((e) => {

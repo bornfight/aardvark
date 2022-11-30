@@ -32,6 +32,12 @@ export const usePost = <
                 dispatch(apiActionHandler.create(data, headers))
                     .then((response) => {
                         setId((response?.data as JsonApiObject)?.id || "");
+                        // fetch newly created, triggers store update
+                        dispatch(
+                            apiActionHandler.get(
+                                (response?.data as JsonApiObject)?.id,
+                            ),
+                        );
                         resolve(response?.data as JsonApiObject);
                     })
                     .catch((e) => {
